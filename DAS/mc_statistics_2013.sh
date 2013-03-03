@@ -4,11 +4,11 @@ dbs search --noheader --production --query="find block,block.size,block.numevent
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2013-01-01 and block.createdate < 2013-02-01" | grep RECO > mc_2013_jan_reco.blocks
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2013-01-01 and block.createdate < 2013-02-01" > mc_2013_jan_aod.blocks
 
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_gen.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_raw.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" | grep -v RECO > mc_2013_feb_sim.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" | grep RECO > mc_2013_feb_reco.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_aod.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_gen.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_raw.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" | grep -v RECO > mc_2013_feb_sim.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" | grep RECO > mc_2013_feb_reco.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2013-02-01 and block.createdate < 2013-03-01" > mc_2013_feb_aod.blocks
  
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2013-03-01 and block.createdate < 2013-04-01" > mc_2013_mar_gen.blocks
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2013-03-01 and block.createdate < 2013-04-01" > mc_2013_mar_raw.blocks
@@ -77,11 +77,11 @@ cat mc_2013_jan_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam
 cat mc_2013_jan_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "January 2013 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 cat mc_2013_jan_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "January 2013 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 
-# cat mc_2013_feb_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2013_feb_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2013_feb_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-RAW: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2013_feb_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2013_feb_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2013_feb_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2013_feb_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2013_feb_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-RAW: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2013_feb_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2013_feb_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2013 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 # 
 # cat mc_2013_mar_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2013 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 # cat mc_2013_mar_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2013 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
