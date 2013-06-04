@@ -5,7 +5,11 @@ from das_client import get_data
 
 def blockquery(dasHost,query):
     output = {}
-    result = json.loads(get_data(dasHost,query,0,0,0))
+    das_data = get_data(dasHost,query,0,0,0)
+    if isinstance(das_data, basestring):
+        result = json.loads(das_data)
+    else:
+        result = das_data
     if result['status'] == 'fail' :
         print 'DAS query failed with reason:',result['reason']
     else :
@@ -33,7 +37,7 @@ def main():
 
     datasetpath = None
     allSites = True
-    mode = 'files'
+    mode = 'none'
     dasHost = 'https://cmsweb.cern.ch'
 
     try:
