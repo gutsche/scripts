@@ -39,6 +39,9 @@ if [ -n "$PS1" ]; then
    # resize the shell at last 
    resize
 
+   # add additional mapping to beginning of line for inside a screen session
+   bind '"\C-p": beginning-of-line'
+
 fi
 
 md() {
