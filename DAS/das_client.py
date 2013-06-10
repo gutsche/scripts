@@ -1,4 +1,4 @@
-#!/usr/bin/env python26
+#!/usr/bin/env python
 #pylint: disable-msg=C0301,C0103,R0914,R0903
 
 """
