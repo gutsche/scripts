@@ -4,7 +4,7 @@ import sys,os
 
 handle = open('tmp')
 
-months = 5
+months = 10
 lines = handle.readlines()
 headers = []
 lists = []
