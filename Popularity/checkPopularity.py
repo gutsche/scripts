@@ -29,19 +29,29 @@ starttime = endtime + relativedelta(months = -1*months)
 
 # get popularity information
 url="https://cms-popularity.cern.ch/popdb/popularity/DSStatInTimeWindow/?tstart=" + starttime.strftime("%Y-%m-%d") + "&tstop=" + endtime.strftime("%Y-%m-%d")
-popularity = json.load(open('output_1'))
+popularity = json.load(open('output_last_2_months'))
 
 if datasetname != None :
+    accessed = False
     for dataset in popularity['DATA']:
         if dataset['COLLNAME'] == datasetname :
             print 'Dataset %s was accessed %i times in the last %i months.' % (datasetname,dataset['NACC'],months)
+            accessed = True
+            break
+    if accessed == False :
+        print 'Dataset %s was NOT accessed in the last %i months.' % (name,months)
             
 if filename != None :
     for line in open(filename).readlines():
         name = line.strip()
+        accessed = False
         for dataset in popularity['DATA']:
             if dataset['COLLNAME'] == name :
                 print 'Dataset %s was accessed %i times in the last %i months.' % (name,dataset['NACC'],months)
+                accessed = True
+                break
+        if accessed == False :
+            print 'Dataset %s was NOT accessed in the last %i months.' % (name,months)
                 
 if dr != None :
     datasets = []
@@ -56,7 +66,13 @@ if dr != None :
         for block in item['data']['dbs']['block']:            
             dataset = block['name'].split('#')[0]
             if dataset['name'] not in datasets: datasets.append(dataset['name'])
+    accessed = False
     for name in datasets:
         for dataset in popularity['DATA']:
             if dataset['COLLNAME'] == name :
                 print 'Dataset %s was accessed %i times in the last %i months.' % (name,dataset['NACC'],months)
+                accessed = True
+                break
+        if accessed == False :
+            print 'Dataset %s was NOT accessed in the last %i months.' % (name,months)
+                
