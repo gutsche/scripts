@@ -1,0 +1,117 @@
+Host *.cern.ch *.fnal.gov *.mit.edu
+  GSSAPIAuthentication yes
+  GSSAPIDelegateCredentials yes
+  PubkeyAuthentication yes
+
+Host *.fnal.gov
+  PreferredAuthentications gssapi-with-mic,gssapi,password
+
+Host lxvoadm*.cern.ch lxplus*.cern.ch cmslpc*.fnal.gov cmscvs.cern.ch
+  PreferredAuthentications gssapi-with-mic,gssapi,password
+  ProxyCommand none
+  GSSAPITrustDNS yes
+
+# Host lxvoadm*.cern.ch
+Host lxplus*.cern.ch
+  DynamicForward 47170
+
+Host cmslpc-sl5.fnal.gov
+  DynamicForward 47270
+
+Host lxvoadm*.cern.ch vo*.cern.ch cms*.cern.ch lxbuild*.cern.ch macms*.cern.ch cmslpc*.fnal.gov cmssrv*.fnal.gov
+  ForwardAgent yes
+
+Host *cvs*.cern.ch *svn*.cern.ch
+  # CVS: http://www.mail-archive.com/debian-ssh@lists.debian.org/msg05389.html
+  # SVN: concurrent accesses (e.g. inside cmsBuild) seem to fight over tunnel.
+  ControlPersist no
+  ProxyCommand none
+  User gutsche
+  GSSAPIAuthentication yes
+  GSSAPIDelegateCredentials yes
+  GSSAPITrustDns yes
+  Protocol 2
+  ForwardX11 no
+
+Host *.cern.ch
+  GSSAPITrustDNS no
+  ProxyCommand proxy-ssh lxvoadm5.cern.ch /usr/bin/nc %h %p
+  ForwardX11 yes
+  ForwardX11Trusted yes
+
+Host *.fnal.gov
+  GSSAPITrustDNS no
+  ProxyCommand proxy-ssh cmslpc-sl5.fnal.gov /usr/bin/nc %h %p
+
+Host *.t2.ucsd.edu
+  ForwardX11 yes
+  ForwardX11Trusted yes
+
+Host vocms144.cern.ch
+  DynamicForward 47171
+
+Host vocms202.cern.ch
+  DynamicForward 47172
+
+Host vocms201.cern.ch
+  DynamicForward 47173
+
+Host vocms215.cern.ch
+  DynamicForward 47174
+
+Host vocms216.cern.ch
+  DynamicForward 47175
+
+Host vocms85.cern.ch
+  DynamicForward 47176
+
+Host vocms109.cern.ch
+  DynamicForward 47177
+
+Host vocms96.cern.ch
+  DynamicForward 47178
+
+Host vocms15.cern.ch
+  DynamicForward 47179
+
+Host vocms13.cern.ch
+  DynamicForward 47180
+
+Host cmssrv98.fnal.gov
+  User cmsdataops
+  DynamicForward 47271
+
+Host cmssrv112.fnal.gov
+  User cmsdataops
+  DynamicForward 47272
+
+Host cmssrv162.fnal.gov
+  User cmsdatatransfers
+  DynamicForward 47273
+  ForwardX11 yes
+  ForwardX11Trusted yes
+
+Host cmssrv94.fnal.gov
+  User cmsdataops
+  DynamicForward 47274
+
+Host cmssrv113.fnal.gov
+  User cmsdataops
+  DynamicForward 47275
+
+Host cmssrv101.fnal.gov
+  User cmsdataops
+  DynamicForward 47276
+
+Host *
+  ServerAliveInterval 5
+  ServerAliveCountMax 6
+  ControlPersist 15
+  ControlMaster auto
+  ControlPath ~/.ssh/link-%r@%h.%p
+  GSSAPIRenewalForcesRekey yes
+  GSSAPITrustDNS yes
+  ForwardX11 no
+  # ForwardX11 yes
+  # ForwardX11Trusted yes
+  Protocol 2
