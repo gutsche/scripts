@@ -29,7 +29,7 @@ url = opts.url
 results = {}
 dbs_query_results = {}
 datatiers = {}
-datatiers['data'] = ['RAW','RECO','AOD','RAW-RECO','ALCARECO','USER']
+datatiers['data'] = ['RAW','RECO','AOD','RAW-RECO','USER']
 datatiers['mc'] = ['GEN','GEN-SIM','GEN-RAW','GEN-SIM-RECO','AODSIM']
 separations = ['PromptReco','PromptSkim']
 exclusion_strings = {}
@@ -47,7 +47,7 @@ if read == None:
 			for block in blocks:
 				exclude = False
 				for exclusion_string in exclusion_strings[category]:
-					if exclusion_string.lower() in block['block_name'].lower(): 
+					if exclusion_string.lower() in block['block_name'].lower():
 						if verbose == True: print 'blockname was rejected:',block['block_name']
 						exclude = True
 						continue
@@ -55,9 +55,9 @@ if read == None:
 				if verbose == True: print 'Querying for the summary for block:',block['block_name'],'!'
 				properties = api3.listBlockSummaries(block_name=block['block_name'])
 				dbs_query_results[category][datatier][block['block_name']] = properties
-			
-	if persist:
-		outputfile = open('dbs_query_result.json','w')
+	
+	if persist != None:
+		outputfile = open(persist,'w')
 		json.dump(dbs_query_results,outputfile)
 		outputfile.close()
 else:
@@ -70,18 +70,24 @@ for category in datatiers.keys():
 		for blockname in dbs_query_results[category][datatier]:
 			triggered_separation = False
 			for separation in separations:
-				if separation.lower() in blockname.lower(): 
+				if separation.lower() in blockname.lower():
 					if separation not in results[category][datatier].keys(): results[category][datatier][separation] = {'events': 0, 'size': 0.0}
 					for property in dbs_query_results[category][datatier][blockname]:
-						results[category][datatier][separation]['size'] += float(property['file_size'])/1000000000000.
-						results[category][datatier][separation]['events'] += property['num_event']
+						try:
+							results[category][datatier][separation]['size'] += float(property['file_size'])/1000000000000.
+							results[category][datatier][separation]['events'] += property['num_event']
+						except:
+							print "Problem with query result for block:",blockname,"result:",property
 					triggered_separation = True
 					continue
 			if triggered_separation == False:
 				if 'All' not in results[category][datatier].keys(): results[category][datatier]['All'] = {'events': 0, 'size': 0.0}
 				for property in dbs_query_results[category][datatier][blockname]:
-					results[category][datatier]['All']['size'] += float(property['file_size'])/1000000000000.
-					results[category][datatier]['All']['events'] += property['num_event']
+					try:
+						results[category][datatier]['All']['size'] += float(property['file_size'])/1000000000000.
+						results[category][datatier]['All']['events'] += property['num_event']
+					except:
+						print "Problem with query result for block:",blockname,"result:",property
 
 # printout
 
@@ -93,9 +99,14 @@ for category in datatiers.keys():
 	line = ''
 	for datatier in datatiers[category]:
 		temp_separations = ['All']
-		if category == 'data': 
-			temp_separations = separations
-			temp_separations.append('All')
+		if category == 'data':
+			if datatier != 'RAW' :
+				temp_separations = list(separations)
+				temp_separations.append('All')
+			if datatier == 'RAW-RECO' :
+				temp_separations = ['PromptSkim','All']
+			if datatier == 'USER' :
+				temp_separations = ['PromptSkim','All']
 		for temp_separation in temp_separations:
 			try:
 				size = results[category][datatier][temp_separation]['size']
