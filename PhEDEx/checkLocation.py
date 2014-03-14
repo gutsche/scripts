@@ -54,12 +54,12 @@ def blockquery(datasets,showOnlyT1,skipT0):
                         output[dataset]['custodial'][site]['size'] += size
                         output[dataset]['custodial'][site]['nfiles'] += nfiles
                     else :
-                        if site not in output[dataset]['custodial'].keys(): output[dataset]['non-custodial'][site] = {'size':0,'nfiles':0}
+                        if site not in output[dataset]['non-custodial'].keys(): output[dataset]['non-custodial'][site] = {'size':0,'nfiles':0}
                         output[dataset]['non-custodial'][site]['size'] += size
                         output[dataset]['non-custodial'][site]['nfiles'] += nfiles
         except:
             print 'problems with dataset:',dataset
-
+            
     return output
     
 def main():
@@ -111,7 +111,6 @@ def main():
         
     showOnlyT1 = opts.showOnlyT1
     skipT0 = opts.skipT0
-                    
     output = blockquery(datasets,showOnlyT1,skipT0)
 
     for dataset in output.keys():
