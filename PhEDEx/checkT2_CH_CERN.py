@@ -80,7 +80,7 @@ def main():
 
     for site in output.keys():
         for group in output[site].keys():
-            if group in quota.keys(): 
+            if group in quota.keys() and 'caf-comm' != group: 
                 quota[group]['used'] = output[site][group]
             else :
                 if 'used' not in quota['caf-comm'].keys(): quota['caf-comm']['used'] = 0
@@ -90,7 +90,7 @@ def main():
                     if verbose == True: print 'group',group,'usage added to dataops'
                 else:
                     quota['caf-comm']['used'] += output[site][group]
-                    if verbose == True: print 'group',group,'usage added to caf-comm'
+                    if verbose == True: print 'group',group,'usage added to caf-comm',formatSize(quota['caf-comm']['used'])
                 
     print ''
     if twiki == True:
