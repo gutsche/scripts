@@ -57,12 +57,12 @@ def main():
     quota = {}
     quota['caf-comm'] = {'description' : 'Commissioning+Physics','quota' : 1325E12}
     quota['caf-alca'] = {'description' : 'AlcaReco','quota' : 225E12}
-    quota['upgrade'] = {'description' : 'Upgrade','quota' : 225E12}
-    quota['relval'] = {'description' : 'RelVal','quota' : 300E12}
+    quota['upgrade'] = {'description' : 'Upgrade','quota' : 325E12}
+    quota['relval'] = {'description' : 'RelVal','quota' : 400E12}
     quota['caf-lumi'] = {'description' : 'Lumi','quota' : 225E12}
     quota['local'] = {'description' : 'local','quota' : 40E12}
     quota['express'] = {'description' : 'Express','quota' : 100E12}
-    quota['dataops'] = {'description' : 'DataOps','quota' : 850E12}
+    quota['dataops'] = {'description' : 'DataOps','quota' : 950E12}
 
     output = groupquery('T2_CH_CERN')
     
