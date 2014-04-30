@@ -37,7 +37,7 @@ if [ -n "$PS1" ]; then
    export PS1="\h:\W> "
 
    # resize the shell at last 
-   resize
+   # resize
 
    # add additional mapping to beginning of line for inside a screen session
    bind '"\C-p": beginning-of-line'
