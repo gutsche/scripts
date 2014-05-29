@@ -7,7 +7,6 @@ alias das='das_client.py --limit=0 --format=plain '
 alias cp='cp -vi'
 alias mv='mv -vi'
 alias du='du -h --max-depth=1'
-alias du='dcdu -h --max-depth=1'
 alias df='df -h'
 
 alias ssh='ssh -CX'
