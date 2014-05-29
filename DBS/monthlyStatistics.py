@@ -34,7 +34,7 @@ datatiers['mc'] = ['GEN','GEN-SIM','GEN-RAW','GEN-SIM-RECO','AODSIM']
 separations = ['PromptReco','PromptSkim']
 exclusion_strings = {}
 exclusion_strings['mc'] = ['test','backfill','jobrobot','sam','bunnies','penguins']
-exclusion_strings['data'] = ['test','backfill','StoreResults','monitor','Error/','Scouting','MiniDaq','/Alca','L1Accept','/Hcal','express','Interfill']
+exclusion_strings['data'] = ['test','backfill','StoreResults','monitor','Error/','Scouting','MiniDaq','/Alca','L1Accept','L1EG','L1Jet','L1Mu','PhysicsDST','VdM','/Hcal','express','Interfill']
 
 api3 = DbsApi(url)
 
