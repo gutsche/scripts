@@ -60,9 +60,9 @@ def main():
     quota['upgrade'] = {'description' : 'Upgrade','quota' : 325E12}
     quota['relval'] = {'description' : 'RelVal','quota' : 400E12}
     quota['caf-lumi'] = {'description' : 'Lumi','quota' : 225E12}
-    quota['local'] = {'description' : 'local','quota' : 40E12}
+    quota['local'] = {'description' : 'local','quota' : 60E12}
     quota['express'] = {'description' : 'Express','quota' : 100E12}
-    quota['dataops'] = {'description' : 'DataOps','quota' : 950E12}
+    quota['dataops'] = {'description' : 'DataOps','quota' : 960E12}
 
     output = groupquery('T2_CH_CERN')
     
@@ -85,7 +85,7 @@ def main():
             else :
                 if 'used' not in quota['caf-comm'].keys(): quota['caf-comm']['used'] = 0
                 if 'used' not in quota['dataops'].keys(): quota['dataops']['used'] = 0
-                if group == 'ib relval' or group == 'analysisops' or group == "facops":
+                if group == 'ib relval' or group == "facops":
                     quota['dataops']['used'] += output[site][group]
                     if verbose == True: print 'group',group,'usage added to dataops'
                 else:
@@ -95,17 +95,26 @@ def main():
     print ''
     if twiki == True:
         print '| *Group* | *Description* | *Quota* | *Usage* | *Percentage* |'
+    totalquota = 0
+    totalused = 0
     for group in quota.keys():
+        totalquota += quota[group]['quota']
+        totalused += quota[group]['used']
         if twiki == True:
             print '| %s | %s |  %s |  %s |  %6.2f |' % (group,quota[group]['description'],formatSize(quota[group]['quota']),formatSize(quota[group]['used']),float(quota[group]['used'])/float(quota[group]['quota'])*100.0)
         else :
             print 'group: %15s description: %25s quota: %10s used: %10s percentage: %6.2f' % (group,quota[group]['description'],formatSize(quota[group]['quota']),formatSize(quota[group]['used']),float(quota[group]['used'])/float(quota[group]['quota'])*100.0)
+            
+    if twiki == True:
+        print '| %s | %s |  %s |  %s |  %6.2f |' % ('Total','',formatSize(totalquota),formatSize(totalused),float(totalused)/float(totalquota)*100.0)
+    else :
+        print 'group: %15s description: %25s quota: %10s used: %10s percentage: %6.2f' % ('Total','',formatSize(totalquota),formatSize(totalused),float(totalused)/float(totalquota)*100.0)
 
     print ''
     print 'Comments:'
     print ''
-    print 'groups IB RelVal, AnalysisOps and FacOps are added to group DataOps'
-    print 'Commissioning and Physics are treated together and their quotas are added'
+    print 'groups IB RelVal and FacOps are added to group DataOps'
+    print 'AnalysisOps, Commissioning and Physics are treated together and their quotas are added'
     print 'All groups not with dedicated quota are added to Commissioning'
     print ''
 if __name__ == '__main__':
