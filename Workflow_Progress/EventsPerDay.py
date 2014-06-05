@@ -156,11 +156,17 @@ def main():
             request_date = datetime.datetime.strptime(workflow_dict['Request date'],"%Y-%m-%d %H:%M:%S")
             request_date = request_date.replace(tzinfo=pytz.timezone('UTC'))
             request_day = int(datetime.datetime(request_date.year, request_date.month, request_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
+            request_events = int(workflow_dict['Requested events'])
+            if request_events == 0 and workflow_dict['Input Dataset'] != '':
+                blocks = api.listBlocks(dataset=workflow_dict['Input Dataset'], detail=False)
+                for block in blocks:
+                    reply= api.listBlockSummaries(block_name=block['block_name'])
+                    request_events += reply[0]['num_event']
             if request_day > then:
                 if workflow_dict['Filter efficiency'] == None :
-                    result[str(request_day)]['REQUESTED'] += workflow_dict['Requested events']
+                        result[str(request_day)]['REQUESTED'] += int(request_events)
                 else:
-                    result[str(request_day)]['REQUESTED'] += workflow_dict['Requested events'] * workflow_dict['Filter efficiency']
+                    result[str(request_day)]['REQUESTED'] += int(request_events) * float(workflow_dict['Filter efficiency'])
                 
     # calculate cumulative values
     first = True
