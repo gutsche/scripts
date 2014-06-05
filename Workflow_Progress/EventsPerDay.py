@@ -43,14 +43,16 @@ def main():
     # subtract one day from today
     now = int(datetime.datetime(current_date.year, current_date.month, current_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
     then = now - sdays*(numdays)
-    print now,then
-
+    
     # generate basename for input and output files
     # use selected dataset, replace wildcards to make it readable
     file_base_name = data
     if file_base_name.startswith('/') == True: file_base_name = file_base_name[1:]
     file_base_name = file_base_name.replace('/','_',99)
     file_base_name = file_base_name.replace('*',"STAR",99)
+
+    # don't count requests with the following status
+    rejected_status = ['rejected-archived', 'aborted-archived', 'aborted', 'failed']
 
     print "Started executing script with selected dataset string:",data,'at',datetime.datetime.utcnow()
 
@@ -70,8 +72,6 @@ def main():
             result[str(now-i*sdays)] = { 'VALID':0, 'PRODUCTION':0, 'REQUESTED':0, 'VALID_CUMULATIVE':0, 'PRODUCTION_CUMULATIVE':0, 'REQUESTED_CUMULATIVE':0}
         print "Created new query result dictionary"
 
-    print len(result.keys())
-    print sorted(result.keys())
     api=DbsApi(url=url)
     outputDataSetsValid = api.listDatasets(dataset=data,detail=1, dataset_access_type="VALID")
     outputDataSetsProd = api.listDatasets(dataset=data,detail=1, dataset_access_type="PRODUCTION")
@@ -133,7 +133,10 @@ def main():
                           'Processing dataset name' : '',
                           'Input Dataset' : info[8],
                           'Output Datasets' : info[9],
+                          'Filter efficiency' : info[10],
+                          'Run white list' : info[11],
                           }
+        if workflow_dict['Status'] in rejected_status: continue
         # match at least one output dataset with match string
         if re.compile('[\w\-]*ACDC[\w\-]*').match(workflowname) is not None: continue
         match = False
@@ -154,7 +157,10 @@ def main():
             request_date = request_date.replace(tzinfo=pytz.timezone('UTC'))
             request_day = int(datetime.datetime(request_date.year, request_date.month, request_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
             if request_day > then:
-                result[str(request_day)]['REQUESTED'] += workflow_dict['Requested events']
+                if workflow_dict['Filter efficiency'] == None :
+                    result[str(request_day)]['REQUESTED'] += workflow_dict['Requested events']
+                else:
+                    result[str(request_day)]['REQUESTED'] += workflow_dict['Requested events'] * workflow_dict['Filter efficiency']
                 
     # calculate cumulative values
     first = True
