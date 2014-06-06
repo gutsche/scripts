@@ -88,7 +88,7 @@ def main():
                 ct=reply[0]['last_modification_date']
                 # strip off hours and seconds from day, renormalized to 00:00
                 starttime_day_ct = int(datetime.datetime(datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).year, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).month, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-                if starttime_day_ct > then:
+                if starttime_day_ct > then and starttime_day_ct <= now:
                     result[str(starttime_day_ct)]['VALID'] += neventsb
                         
     for dataset in outputDataSetsProd:
@@ -103,7 +103,7 @@ def main():
                 ct=reply[0]['last_modification_date']
                 # strip off hours and seconds from day, renormalized to 00:00
                 starttime_day_ct = int(datetime.datetime(datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).year, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).month, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-                if starttime_day_ct > then:
+                if starttime_day_ct > then and starttime_day_ct <= now:
                     result[str(starttime_day_ct)]['PRODUCTION'] += neventsb
                         
     # load requests from json
@@ -162,7 +162,7 @@ def main():
                 for block in blocks:
                     reply= api.listBlockSummaries(block_name=block['block_name'])
                     request_events += reply[0]['num_event']
-            if request_day > then:
+            if request_day > then and request_day <= now:
                 if workflow_dict['Filter efficiency'] == None :
                         result[str(request_day)]['REQUESTED'] += int(request_events)
                 else:
