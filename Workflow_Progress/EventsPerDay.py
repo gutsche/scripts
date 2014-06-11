@@ -20,11 +20,13 @@ def main():
     parser.add_option("-u", "--url", dest="url", help="DBS Instance url. default is https://cmsweb.cern.ch/dbs/prod/global/DBSReader", metavar="<url>")
     parser.add_option("-c", "--couchurl", dest="couchurl", help="Couch Instance url. default is cmssrv101.fnal.gov:7714", metavar="<couchurl>")
     parser.add_option("-l", "--length", dest="length", help="Number of days for calculate the accumated events. It is Optional, default is 30 days.", metavar="<length>")
+    parser.add_option("-s", "--startdate", dest="startdate", help="Startdate in the form of 2014-06-11, overrides -l", metavar="<startdate>")
     parser.add_option("-d", "--dataset", dest="dataset", help="The dataset name for cacluate the events. Allows to use wildcards, don't forget to escape on the commandline.", metavar="<dataset>")
    
     parser.set_defaults(url="https://cmsweb.cern.ch/dbs/prod/global/DBSReader")
     parser.set_defaults(couchurl="cmssrv101.fnal.gov:7714")
     parser.set_defaults(length=30)
+    parser.set_defaults(startdate=None)
    
     (opts, args) = parser.parse_args()
     if not (opts.dataset or opts.datatier):
@@ -35,27 +37,35 @@ def main():
     couchurl = opts.couchurl
     data = opts.dataset
     data_regexp = data.replace('*','[\w\-]*',99)
-    numdays = int(opts.length)
+
     # seconds per day	
     sdays = 86400
     # determine start time of current day
     current_date = datetime.datetime.utcnow().date()
-    # subtract one day from today
     now = int(datetime.datetime(current_date.year, current_date.month, current_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
+
+    # determine numdays
+    numdays = int(opts.length)
+    if opts.startdate != None:
+        startdate=str(opts.startdate).split('-')
+        start = int(datetime.datetime(int(startdate[0]), int(startdate[1]), int(startdate[2]),0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
+        numdays = (now - start)/sdays - 1
+        
     then = now - sdays*(numdays)
-    
+
     # generate basename for input and output files
     # use selected dataset, replace wildcards to make it readable
     file_base_name = data
     if file_base_name.startswith('/') == True: file_base_name = file_base_name[1:]
     file_base_name = file_base_name.replace('/','_',99)
     file_base_name = file_base_name.replace('*',"STAR",99)
-
+    
     # don't count requests with the following status
     rejected_status = ['rejected-archived', 'aborted-archived', 'aborted', 'failed']
-
+    
     print "Started executing script with selected dataset string:",data,'at',datetime.datetime.utcnow()
-
+    print "Time range:",datetime.datetime.fromtimestamp(int(now), tz=pytz.timezone('UTC')).strftime("%d %b %Y"), "to", datetime.datetime.fromtimestamp(int(then), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
+    
     # load output dictionary from json file, if not existing, create dictionary, key is the starting time of the day
     try:
         dictfile = open(file_base_name + ".json")
@@ -71,11 +81,11 @@ def main():
         for i in range(numdays):
             result[str(now-i*sdays)] = { 'VALID':0, 'PRODUCTION':0, 'REQUESTED':0, 'VALID_CUMULATIVE':0, 'PRODUCTION_CUMULATIVE':0, 'REQUESTED_CUMULATIVE':0}
         print "Created new query result dictionary"
-
+    
     api=DbsApi(url=url)
     outputDataSetsValid = api.listDatasets(dataset=data,detail=1, dataset_access_type="VALID")
     outputDataSetsProd = api.listDatasets(dataset=data,detail=1, dataset_access_type="PRODUCTION")
-
+    
     for dataset in outputDataSetsValid:
         inp=dataset['dataset']
         ct = dataset['creation_date']
@@ -150,7 +160,7 @@ def main():
                 if re.compile(data_regexp).match(output_dataset[0]) is not None:
                     match = True
                     break
-
+    
         if match == True:
             # extract unix time of start of day of request date
             request_date = datetime.datetime.strptime(workflow_dict['Request date'],"%Y-%m-%d %H:%M:%S")
@@ -180,12 +190,12 @@ def main():
             result[day]['VALID_CUMULATIVE'] = result[str(int(day)-86400)]['VALID_CUMULATIVE'] + result[day]['VALID']
             result[day]['PRODUCTION_CUMULATIVE'] = result[str(int(day)-86400)]['PRODUCTION_CUMULATIVE'] + result[day]['PRODUCTION']
             result[day]['REQUESTED_CUMULATIVE'] = result[str(int(day)-86400)]['REQUESTED_CUMULATIVE'] + result[day]['REQUESTED']
-
+    
     # write output to files
     csv_output = open(file_base_name + '.csv','w')
     json_output = open(file_base_name + '.json','w')
-
-
+    
+    
     for day in sorted(result.keys()):
         csv_line = "%s,%i,%i,%i,%i,%i,%i,%i,%i" % (datetime.datetime.fromtimestamp(int(day), tz=pytz.timezone('UTC')).strftime("%d %b %Y"),result[day]['VALID'],result[day]['PRODUCTION'],result[day]['PRODUCTION']+result[day]['VALID'],result[day]['REQUESTED'],result[day]['VALID_CUMULATIVE'],result[day]['PRODUCTION_CUMULATIVE'],result[day]['PRODUCTION_CUMULATIVE']+result[day]['VALID_CUMULATIVE'],result[day]['REQUESTED_CUMULATIVE'])
         csv_output.write(csv_line + '\n')
@@ -193,7 +203,7 @@ def main():
     
     json.dump(result,json_output)
     json_output.close
-
+    
     print "Finished executing script writing json and csv with base name",file_base_name,'at',datetime.datetime.utcnow()
 
     sys.exit(0);
