@@ -7,11 +7,53 @@
 
 """
 
-import  sys,datetime,json,re,urllib2,httplib,time
-import pytz
+import sys,json,re,urllib2,httplib
+import pytz,datetime,time
 from optparse import OptionParser
 from dbs.apis.dbsClient import DbsApi
 from dbs.exceptions.dbsClientException import dbsClientException
+
+# seconds per day	
+sdays = 86400
+
+def local_time_offset(t=None):
+    """Return offset of local zone from GMT, either at present or at time t."""
+    # python2.3 localtime() can't take None
+    if t is None:
+        t = time.time()
+
+    if time.localtime(t).tm_isdst and time.daylight:
+        return -time.altzone
+    else:
+        return -time.timezone
+        
+def utcTimestampFromDate(year,month,day):
+    local = datetime.datetime(year,month,day)
+    return int(local.strftime('%s')) + local_time_offset()
+    
+def utcTimeStringFromUtcTimestamp(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
+
+def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result):
+    # query for all datasets with status using the dataset that can include wildcards
+    # use last modification date of block to count events
+    # restrict to datasets that have been created 30 days before the start of the query
+    datasets = dbsapi.listDatasets(dataset=dataset,detail=1, dataset_access_type=status)    
+    for dataset in datasets:
+        inp=dataset['dataset']
+        ct = dataset['creation_date']
+        if ct > (start-30*sdays):
+            blocks = dbsapi.listBlocks(dataset=inp, detail=True)
+            for block in blocks:
+                reply= dbsapi.listBlockSummaries(block_name=block['block_name'])
+                neventsb= reply[0]['num_event']
+                reply=dbsapi.listFiles(block_name=block['block_name'],detail=True)
+                ct=reply[0]['last_modification_date']
+                # use the day of ct at 00:00:00 UTC as identifier
+                ct -= ct%sdays
+                if ct >= start and ct <= end:
+                    result[str(ct)][status] += neventsb
+    
 
 def main():
     usage="%prog <options>"
@@ -29,29 +71,29 @@ def main():
     parser.set_defaults(startdate=None)
    
     (opts, args) = parser.parse_args()
-    if not (opts.dataset or opts.datatier):
+    if not (opts.dataset):
         parser.print_help()
         parser.error('either --dataset or --datatier is required')	
         
     url = opts.url
+    dbsapi=DbsApi(url=url)
     couchurl = opts.couchurl
     data = opts.dataset
     data_regexp = data.replace('*','[\w\-]*',99)
 
-    # seconds per day	
-    sdays = 86400
-    # determine start time of current day
+    # all days are identified by their unix timestamp of 00:00:00 UTC of that day
+    # last day to query is yesterday
     current_date = datetime.datetime.utcnow().date()
-    now = int(datetime.datetime(current_date.year, current_date.month, current_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-
-    # determine numdays
+    end = utcTimestampFromDate(current_date.year,current_date.month,current_date.day-1)
+    # calculate start day
     numdays = int(opts.length)
+    start = end - sdays*(numdays)
     if opts.startdate != None:
         startdate=str(opts.startdate).split('-')
-        start = int(datetime.datetime(int(startdate[0]), int(startdate[1]), int(startdate[2]),0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-        numdays = (now - start)/sdays - 1
+        start = utcTimestampFromDate(int(startdate[0]), int(startdate[1]), int(startdate[2]))
+        numdays = (end - start)/sdays
         
-    then = now - sdays*(numdays)
+    print 'Querying for events created per day for datasets:',data,'for the time range from',utcTimeStringFromUtcTimestamp(start),'to',utcTimeStringFromUtcTimestamp(end)
 
     # generate basename for input and output files
     # use selected dataset, replace wildcards to make it readable
@@ -60,145 +102,25 @@ def main():
     file_base_name = file_base_name.replace('/','_',99)
     file_base_name = file_base_name.replace('*',"STAR",99)
     
-    # don't count requests with the following status
-    rejected_status = ['rejected-archived', 'aborted-archived', 'aborted', 'failed']
-    
-    print "Started executing script with selected dataset string:",data,'at',datetime.datetime.utcnow()
-    print "Time range:",datetime.datetime.fromtimestamp(int(now), tz=pytz.timezone('UTC')).strftime("%d %b %Y"), "to", datetime.datetime.fromtimestamp(int(then), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
-    
-    # load output dictionary from json file, if not existing, create dictionary, key is the starting time of the day
-    try:
-        dictfile = open(file_base_name + ".json")
-        result = json.load(dictfile)
-        print "Loaded query result dictionary from " + file_base_name + ".json"
-        # reset days that will be queries in this script
-        for i in range(numdays):
-            result[str(now-i*sdays)] = { 'VALID':0, 'PRODUCTION':0, 'REQUESTED':0, 'VALID_CUMULATIVE':0, 'PRODUCTION_CUMULATIVE':0, 'REQUESTED_CUMULATIVE':0}
-        dictfile.close()
-    except:
-        # create dictionary, 
-        result = {}
-        for i in range(numdays):
-            result[str(now-i*sdays)] = { 'VALID':0, 'PRODUCTION':0, 'REQUESTED':0, 'VALID_CUMULATIVE':0, 'PRODUCTION_CUMULATIVE':0, 'REQUESTED_CUMULATIVE':0}
-        print "Created new query result dictionary"
-    
-    api=DbsApi(url=url)
-    outputDataSetsValid = api.listDatasets(dataset=data,detail=1, dataset_access_type="VALID")
-    outputDataSetsProd = api.listDatasets(dataset=data,detail=1, dataset_access_type="PRODUCTION")
-    
-    for dataset in outputDataSetsValid:
-        inp=dataset['dataset']
-        ct = dataset['creation_date']
-        if ct > (then-30*sdays):
-            blocks = api.listBlocks(dataset=inp, detail=True)
-            for block in blocks:
-                reply= api.listBlockSummaries(block_name=block['block_name'])
-                neventsb= reply[0]['num_event']
-                reply=api.listFiles(block_name=block['block_name'],detail=True)
-                ct=reply[0]['last_modification_date']
-                # strip off hours and seconds from day, renormalized to 00:00
-                starttime_day_ct = int(datetime.datetime(datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).year, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).month, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-                if starttime_day_ct > then and starttime_day_ct <= now:
-                    result[str(starttime_day_ct)]['VALID'] += neventsb
-                        
-    for dataset in outputDataSetsProd:
-        inp=dataset['dataset']
-        ct = dataset['creation_date']
-        if ct > (then-30*sdays):
-            blocks = api.listBlocks(dataset=inp, detail=True)
-            for block in blocks:
-                reply= api.listBlockSummaries(block_name=block['block_name'])
-                neventsb= reply[0]['num_event']
-                reply=api.listFiles(block_name=block['block_name'],detail=True)
-                ct=reply[0]['last_modification_date']
-                # strip off hours and seconds from day, renormalized to 00:00
-                starttime_day_ct = int(datetime.datetime(datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).year, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).month, datetime.datetime.fromtimestamp(ct, tz=pytz.timezone('UTC')).day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-                if starttime_day_ct > then and starttime_day_ct <= now:
-                    result[str(starttime_day_ct)]['PRODUCTION'] += neventsb
-                        
-    # load requests from json
-    # load requests from couch db
-    header = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    conn = httplib.HTTPConnection(couchurl)
-    conn.request("GET", '/latency_analytics/_design/latency/_view/maria', headers= header)
-    response = conn.getresponse()
-    data = response.read()
-    conn.close()
-    myString = data.decode('utf-8')
-    workflows = json.loads(myString)['rows']
-    
-    for entry in workflows:
-        workflowname = entry['id']
-        info = entry['value']
-        workflow_dict = {
-                          'Campaign' : info[0],
-                          'Tier' : info[1],
-                          'Task type' : info[2],
-                          'Status' : info[3],
-                          'Priority' : info[4],
-                          'Requested events' : info[5],
-                          '% Complete' : info[6],
-                          'Completed events' : 0,
-                          'Request date' : time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(info[7])),
-                          'Processing dataset name' : '',
-                          'Input Dataset' : info[8],
-                          'Output Datasets' : info[9],
-                          'Filter efficiency' : info[10],
-                          'Run white list' : info[11],
-                          }
-        if workflow_dict['Status'] in rejected_status: continue
-        # match at least one output dataset with match string
-        if re.compile('[\w\-]*ACDC[\w\-]*').match(workflowname) is not None: continue
-        match = False
-        try:
-            for output_dataset in workflow_dict['Output Datasets']:
-                if re.compile(data_regexp).match(output_dataset) is not None:
-                    match = True
-                    break
-        except:
-            for output_dataset in workflow_dict['Output Datasets']:
-                if re.compile(data_regexp).match(output_dataset[0]) is not None:
-                    match = True
-                    break
-    
-        if match == True:
-            # extract unix time of start of day of request date
-            request_date = datetime.datetime.strptime(workflow_dict['Request date'],"%Y-%m-%d %H:%M:%S")
-            request_date = request_date.replace(tzinfo=pytz.timezone('UTC'))
-            request_day = int(datetime.datetime(request_date.year, request_date.month, request_date.day,0,0,0,0, tzinfo=pytz.timezone('UTC')).strftime("%s"))
-            request_events = int(workflow_dict['Requested events'])
-            if request_events == 0 and workflow_dict['Input Dataset'] != '':
-                blocks = api.listBlocks(dataset=workflow_dict['Input Dataset'], detail=False)
-                for block in blocks:
-                    reply= api.listBlockSummaries(block_name=block['block_name'])
-                    request_events += reply[0]['num_event']
-            if request_day > then and request_day <= now:
-                if workflow_dict['Filter efficiency'] == None :
-                        result[str(request_day)]['REQUESTED'] += int(request_events)
-                else:
-                    result[str(request_day)]['REQUESTED'] += int(request_events) * float(workflow_dict['Filter efficiency'])
+    # create dictionary, 
+    result = {}
+    for i in range(numdays+1):
+        result[str(end-i*sdays)] = { 'VALID':0, 'PRODUCTION':0, 'REQUESTED':0, 'INVALID':0, 'DEPRECATED':0}
+
                 
-    # calculate cumulative values
-    first = True
-    for day in sorted(result.keys()):
-        if first == True:
-            result[day]['VALID_CUMULATIVE'] = result[day]['VALID']
-            result[day]['PRODUCTION_CUMULATIVE'] = result[day]['PRODUCTION']
-            result[day]['REQUESTED_CUMULATIVE'] = result[day]['REQUESTED']
-            first = False
-        else :
-            result[day]['VALID_CUMULATIVE'] = result[str(int(day)-86400)]['VALID_CUMULATIVE'] + result[day]['VALID']
-            result[day]['PRODUCTION_CUMULATIVE'] = result[str(int(day)-86400)]['PRODUCTION_CUMULATIVE'] + result[day]['PRODUCTION']
-            result[day]['REQUESTED_CUMULATIVE'] = result[str(int(day)-86400)]['REQUESTED_CUMULATIVE'] + result[day]['REQUESTED']
-    
+    # query
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'VALID',result)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'PRODUCTION',result)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'INVALID',result)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'DEPRECATED',result)
+                    
     # write output to files
     csv_output = open(file_base_name + '.csv','w')
     json_output = open(file_base_name + '.json','w')
     
-    
     for day in sorted(result.keys()):
-        csv_line = "%s,%i,%i,%i,%i,%i,%i,%i,%i" % (datetime.datetime.fromtimestamp(int(day), tz=pytz.timezone('UTC')).strftime("%d %b %Y"),result[day]['VALID'],result[day]['PRODUCTION'],result[day]['PRODUCTION']+result[day]['VALID'],result[day]['REQUESTED'],result[day]['VALID_CUMULATIVE'],result[day]['PRODUCTION_CUMULATIVE'],result[day]['PRODUCTION_CUMULATIVE']+result[day]['VALID_CUMULATIVE'],result[day]['REQUESTED_CUMULATIVE'])
-        csv_output.write(csv_line + '\n')
+        csv_line = "%s,%i,%i,%i,%i,%i\n" % (utcTimeStringFromUtcTimestamp(int(day)),result[day]['VALID'],result[day]['PRODUCTION'],result[day]['REQUESTED'],result[day]['INVALID'],result[day]['DEPRECATED'])
+        csv_output.write(csv_line)
     csv_output.close()
     
     json.dump(result,json_output)

@@ -15,6 +15,27 @@ from ROOT import gROOT,kRed,kBlue,kWhite
 gROOT.Reset()
 gROOT.SetBatch(True)
 
+# seconds per day	
+sdays = 86400
+
+def local_time_offset(t=None):
+    """Return offset of local zone from GMT, either at present or at time t."""
+    # python2.3 localtime() can't take None
+    if t is None:
+        t = time.time()
+
+    if time.localtime(t).tm_isdst and time.daylight:
+        return -time.altzone
+    else:
+        return -time.timezone
+        
+def utcTimestampFromDate(year,month,day):
+    local = datetime.datetime(year,month,day)
+    return int(local.strftime('%s')) + local_time_offset()
+    
+def utcTimeStringFromUtcTimestamp(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
+
 def PositiveIntegerWithCommas(number):
     if number > 0:
         return ''.join(reversed([x + (',' if i and not i % 3 else '') for i, x in enumerate(reversed(str(number)))]))
@@ -98,17 +119,17 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
             data[entry]['hist'].SetBinContent(bin+1,bin_value+data[entry]['hist'].GetBinContent(bin))
             data[entry]['table'][bins[bin]] = bin_value
             if nBins < 40:
-                data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             else:
                 if (bin) == 0:
                     # first bin
-                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
                 elif (bin+1) % labelOffset == 0 and (bin+1) < nBins-labelOffset :
                     # only 20 axis labels are drawn
-                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
                 elif (bin+1) == nBins:
                     # last bin
-                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                    data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
                 else:
                     data[entry]['hist'].GetXaxis().SetBinLabel(bin+1,'')
                     
@@ -121,17 +142,17 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
         other[other_identifier]['hist'].SetBinContent(bin+1,other_bin_value+other[other_identifier]['hist'].GetBinContent(bin))
         other[other_identifier]['table'][bins[bin]] = other_bin_value
         if nBins < 40:
-            other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+            other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
         else:
             if (bin) == 0:
                 # first bin
-                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             elif (bin+1) % labelOffset == 0 and (bin+1) < nBins-labelOffset :
                 # only 20 axis labels are drawn
-                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             elif (bin+1) == nBins:
                 # last bin
-                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             else:
                 other[other_identifier]['hist'].GetXaxis().SetBinLabel(bin+1,'')
 
@@ -216,6 +237,14 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
         total_per_day += other[other_identifier]['table'][day]
         table += '  ' + PositiveIntegerWithCommas(total_per_day) + ' |\n'
         total += total_per_day
+    table += '| *Total* |'
+    denominator = nBins
+    if lastDays != -1:
+        denominator = lastDays
+    for entry in data.keys():
+        table += '  ' + PositiveIntegerWithCommas(data[entry]['total']) + ' |'
+    table += '  ' + PositiveIntegerWithCommas(other[other_identifier]['total']) + ' |'
+    table += '  ' + PositiveIntegerWithCommas(total) + ' |\n'
     table += '| *Average* |'
     denominator = nBins
     if lastDays != -1:

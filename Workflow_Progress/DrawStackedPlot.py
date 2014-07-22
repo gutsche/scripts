@@ -5,7 +5,7 @@ Draw stacked plot using ROOT
 
 """
 
-import  sys,datetime,json,re,urllib2,httplib,time
+import sys,datetime,json,re,urllib2,httplib,time
 import pytz
 from optparse import OptionParser
 
@@ -14,6 +14,27 @@ from ROOT import gROOT,kRed,kBlue,kWhite
 
 gROOT.Reset()
 gROOT.SetBatch(True)
+
+# seconds per day	
+sdays = 86400
+
+def local_time_offset(t=None):
+    """Return offset of local zone from GMT, either at present or at time t."""
+    # python2.3 localtime() can't take None
+    if t is None:
+        t = time.time()
+
+    if time.localtime(t).tm_isdst and time.daylight:
+        return -time.altzone
+    else:
+        return -time.timezone
+        
+def utcTimestampFromDate(year,month,day):
+    local = datetime.datetime(year,month,day)
+    return int(local.strftime('%s')) + local_time_offset()
+    
+def utcTimeStringFromUtcTimestamp(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
 
 def PositiveIntegerWithCommas(number):
     if number > 0:
@@ -28,6 +49,7 @@ def drawStackedPlot(json_file_name, lastDays = -1):
     identifier = json_file_name.split('.')[0]
     identifier = identifier.replace('STAR_','*/')
     identifier = '/' + identifier
+    identifier = identifier.replace('STAR','*')
     if lastDays == -1:
         print 'Creating VALID and PRODUCTION stack plot for',identifier,'reading in file',json_file_name
     else:
@@ -66,21 +88,21 @@ def drawStackedPlot(json_file_name, lastDays = -1):
         production.SetBinContent(bin+1,inputdata[bins[bin]]['PRODUCTION']+production.GetBinContent(bin))
         total_production += inputdata[bins[bin]]['PRODUCTION']
         if nBins < 40:
-            valid.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
-            production.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+            valid.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
+            production.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
         else:
             if (bin) == 0:
                 # first bin
-                valid.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
-                production.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                valid.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
+                production.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             elif (bin+1) % labelOffset == 0 and (bin+1) < nBins-labelOffset :
                 # only 20 axis labels are drawn
-                valid.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
-                production.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                valid.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
+                production.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             elif (bin+1) == nBins:
                 # last bin
-                valid.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
-                production.GetXaxis().SetBinLabel(bin+1,datetime.datetime.fromtimestamp(int(bins[bin])).strftime("%d %b %Y"))
+                valid.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
+                production.GetXaxis().SetBinLabel(bin+1,utcTimeStringFromUtcTimestamp(int(bins[bin])))
             else:
                 valid.GetXaxis().SetBinLabel(bin+1,'')
                 production.GetXaxis().SetBinLabel(bin+1,'')
