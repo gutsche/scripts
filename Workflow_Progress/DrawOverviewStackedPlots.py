@@ -170,6 +170,9 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
     other[other_identifier]['hist'].SetLineColor(9)
     other[other_identifier]['hist'].SetFillColor(9)
     other[other_identifier]['hist'].SetFillStyle(1000)
+    if nBins < 40:
+        other[other_identifier]['hist'].SetBarWidth(0.8)
+        other[other_identifier]['hist'].SetBarOffset(0.1)
     counter = 1
     for entry in data.keys():
         counter += 1
@@ -186,6 +189,9 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
         data[entry]['hist'].SetLineColor(counter)
         data[entry]['hist'].SetFillColor(counter)
         data[entry]['hist'].SetFillStyle(1000)
+        if nBins < 40:
+            data[entry]['hist'].SetBarWidth(0.8)
+            data[entry]['hist'].SetBarOffset(0.1)
     
     # draw and save in pdf
     title = 'Overview for DBS-status VALID'
@@ -204,7 +210,7 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
     else:
         title += ', avg/day: ' + PositiveIntegerWithCommas(int(float(total)/float(lastDays)))
     stack.SetTitle(title)
-    stack.Draw("C")
+    stack.Draw("bar0")
     stack.GetXaxis().LabelsOption('v')
     legend = c1.BuildLegend(0.14,0.8,0.64,0.89)
     legend.SetFillColor(kWhite)
