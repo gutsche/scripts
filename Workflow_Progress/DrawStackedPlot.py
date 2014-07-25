@@ -116,6 +116,9 @@ def drawStackedPlot(json_file_name, lastDays = -1):
     valid.SetLineColor(kBlue)
     valid.SetFillColor(kBlue)
     valid.SetFillStyle(1000)
+    if nBins < 40:
+        valid.SetBarWidth(0.8)
+        valid.SetBarOffset(0.1)
     production.SetTitle('Events with DBS-status PRODUCTION, total: ' + PositiveIntegerWithCommas(total_production))
     production.SetStats(False)
     production.GetXaxis().CenterLabels()
@@ -124,12 +127,15 @@ def drawStackedPlot(json_file_name, lastDays = -1):
     production.SetLineColor(kRed)
     production.SetFillColor(kRed)
     production.SetFillStyle(1000)
+    if nBins < 40:
+        production.SetBarWidth(0.8)
+        production.SetBarOffset(0.1)
     
     # draw and save in pdf
     stack = THStack('stack',identifier)
     stack.Add(valid)
     stack.Add(production)
-    stack.Draw("C")
+    stack.Draw("bar0")
     stack.GetXaxis().LabelsOption('v')
     legend = c1.BuildLegend(0.14,0.8,0.54,0.89)
     legend.SetFillColor(kWhite)
