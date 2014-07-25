@@ -81,8 +81,8 @@ if (months > 0):
 
 if ( report == True ):
 	total = queryStatistics(startdate, enddate, "", "", binwidth)
-	ust1_destination = queryStatistics(startdate, enddate, "T1_US_FNAL_Buffer", "", binwidth)
-	ust1_source = queryStatistics(startdate, enddate, "", "T1_US_FNAL_Buffer", binwidth)
+	ust1_destination = queryStatistics(startdate, enddate, "T1_US_FNAL_*", "", binwidth)
+	ust1_source = queryStatistics(startdate, enddate, "", "T1_US_FNAL_*", binwidth)
 	ust2_destination = queryStatistics(startdate, enddate, "T2_US_*", "", binwidth)
 	ust2_source = queryStatistics(startdate, enddate, "", "T2_US_*", binwidth)
 	print "Statistics report (\"All CMS cites\", \"USCMS T1 Import\", \"USCMS T1 Export\", \"USCMS T2s Import\", \"USCMS T2s Export\")"
