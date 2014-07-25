@@ -33,11 +33,20 @@ def utcTimestampFromDate(year,month,day):
     
 def utcTimeStringFromUtcTimestamp(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
+    
+def PositiveIntegerWithCommas(number):
+    if number > 0:
+        return ''.join(reversed([x + (',' if i and not i % 3 else '') for i, x in enumerate(reversed(str(number)))]))
 
-def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result):
+    return str(number)
+
+
+def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result,verbose):
     # query for all datasets with status using the dataset that can include wildcards
     # use last modification date of block to count events
     # restrict to datasets that have been created 30 days before the start of the query
+    if verbose == True:
+        temp_results = {}
     datasets = dbsapi.listDatasets(dataset=dataset,detail=1, dataset_access_type=status)    
     for dataset in datasets:
         inp=dataset['dataset']
@@ -53,6 +62,19 @@ def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result):
                 ct -= ct%sdays
                 if ct >= start and ct <= end:
                     result[str(ct)][status] += neventsb
+                    if verbose == True:
+                        if str(ct) not in temp_results.keys(): temp_results[str(ct)] = {}
+                        if inp not in temp_results[str(ct)].keys(): temp_results[str(ct)][inp] = 0
+                        temp_results[str(ct)][inp] += neventsb
+                        
+    if verbose == True:
+        print ''
+        print 'Status:',status
+        print ''
+        for day in temp_results.keys():
+            for dataset in sorted(temp_results[day], key=temp_results[day].get, reverse=True):
+                print utcTimeStringFromUtcTimestamp(day),dataset,PositiveIntegerWithCommas(temp_results[day][dataset])
+                
     
 
 def main():
@@ -64,6 +86,7 @@ def main():
     parser.add_option("-l", "--length", dest="length", help="Number of days for calculate the accumated events. It is Optional, default is 30 days.", metavar="<length>")
     parser.add_option("-s", "--startdate", dest="startdate", help="Startdate in the form of 2014-06-11, overrides -l", metavar="<startdate>")
     parser.add_option("-d", "--dataset", dest="dataset", help="The dataset name for cacluate the events. Allows to use wildcards, don't forget to escape on the commandline.", metavar="<dataset>")
+    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Verbose output")
    
     parser.set_defaults(url="https://cmsweb.cern.ch/dbs/prod/global/DBSReader")
     parser.set_defaults(couchurl="cmssrv101.fnal.gov:7714")
@@ -78,6 +101,7 @@ def main():
     url = opts.url
     dbsapi=DbsApi(url=url)
     couchurl = opts.couchurl
+    verbose = opts.verbose
     data = opts.dataset
     data_regexp = data.replace('*','[\w\-]*',99)
 
@@ -109,10 +133,10 @@ def main():
 
                 
     # query
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'VALID',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'PRODUCTION',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'INVALID',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'DEPRECATED',result)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'VALID',result,verbose)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'PRODUCTION',result,verbose)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'INVALID',result,verbose)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'DEPRECATED',result,verbose)
                     
     # write output to files
     csv_output = open(file_base_name + '.csv','w')
