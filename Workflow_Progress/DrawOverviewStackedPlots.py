@@ -42,7 +42,7 @@ def PositiveIntegerWithCommas(number):
 
     return str(number)
     
-def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
+def drawStackedPlot(all_json_file_name, json_file_names, status, nostack, lastDays = -1):
     # open json files
     # use all json file and subtract all specific json files in the end, therefore call it other although 'inputdata' points to the all_json_file_name
     other = {}
@@ -170,6 +170,7 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
     other[other_identifier]['hist'].SetLineColor(9)
     other[other_identifier]['hist'].SetFillColor(9)
     other[other_identifier]['hist'].SetFillStyle(1000)
+    if nostack: other[other_identifier]['hist'].SetFillStyle(0)
     if nBins < 40:
         other[other_identifier]['hist'].SetBarWidth(0.8)
         other[other_identifier]['hist'].SetBarOffset(0.1)
@@ -189,6 +190,7 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
         data[entry]['hist'].SetLineColor(counter)
         data[entry]['hist'].SetFillColor(counter)
         data[entry]['hist'].SetFillStyle(1000)
+        if nostack: data[entry]['hist'].SetFillStyle(0)
         if nBins < 40:
             data[entry]['hist'].SetBarWidth(0.8)
             data[entry]['hist'].SetBarOffset(0.1)
@@ -210,7 +212,10 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, lastDays = -1):
     else:
         title += ', avg/day: ' + PositiveIntegerWithCommas(int(float(total)/float(lastDays)))
     stack.SetTitle(title)
-    stack.Draw("bar0")
+    if nostack == True:
+        stack.Draw("nostack,L")
+    else:
+        stack.Draw("bar0")
     stack.GetXaxis().LabelsOption('v')
     legend = c1.BuildLegend(0.14,0.8,0.64,0.89)
     legend.SetFillColor(kWhite)
@@ -275,6 +280,7 @@ def main():
     parser.add_option("-a", "--all", dest="all", help="Input data of the complete production in JSON format", metavar="<all>")
     parser.add_option("-l", "--last", dest="last", help="restrict to last X days of the input JSON, default is 7 days.", metavar="<last>")
     parser.add_option("-s", "--status", dest="status", help="To prepare plots for events with DBS-status VALID+PRODUCTION, select -s production; to prepare plots for DBS-status VALID, selecte -s valid; default is production", metavar="<status>")
+    parser.add_option("-n", "--nostack", action="store_true", dest="nostack", default=False, help="Don't stack plots")    
     parser.set_defaults(last=7)
     parser.set_defaults(status='production')
    
@@ -283,8 +289,8 @@ def main():
         parser.print_help()
         parser.error('Please specify input data in JSON format using -d or --data, and input JSON file for the complete production using -a or --all')        
     data = opts.data.split(',')
-    drawStackedPlot(opts.all,data,opts.status,-1)
-    drawStackedPlot(opts.all,data,opts.status,opts.last)
+    drawStackedPlot(opts.all,data,opts.status,opts.nostack,-1)
+    drawStackedPlot(opts.all,data,opts.status,opts.nostack,opts.last)
     
     sys.exit(0);
 
