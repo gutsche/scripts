@@ -49,6 +49,7 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, nostack, lastDa
     identifier = all_json_file_name.split('.')[0]
     identifier = identifier.replace('STAR_','*/')
     identifier = '/' + identifier
+    identifier = identifier.replace('STAR','*')
     other[identifier] = {}
     other[identifier]['inputdata'] = json.load(open(all_json_file_name))
     other[identifier]['total'] = 0
@@ -60,6 +61,7 @@ def drawStackedPlot(all_json_file_name, json_file_names, status, nostack, lastDa
         identifier = json_file_name.split('.')[0]
         identifier = identifier.replace('STAR_','*/')
         identifier = '/' + identifier
+        identifier = identifier.replace('STAR','*')
         data[identifier] = {}
         data[identifier]['inputdata'] = json.load(open(json_file_name))
         data[identifier]['total'] = 0
