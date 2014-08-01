@@ -124,8 +124,8 @@ def main():
 
     # all days are identified by their unix timestamp of 00:00:00 UTC of that day
     # last day to query is yesterday
-    current_date = datetime.datetime.utcnow().date()
-    end = utcTimestampFromDate(current_date.year,current_date.month,current_date.day-1)
+    current_corrected_date = datetime.datetime.utcnow().date()-datetime.timedelta(days=1)
+    end = utcTimestampFromDate(current_corrected_date.year,current_corrected_date.month,current_corrected_date.day)
     # calculate start day
     numdays = int(opts.length)
     start = end - sdays*(numdays)
