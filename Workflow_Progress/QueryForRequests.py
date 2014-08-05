@@ -20,7 +20,7 @@ def QueryForRquestedEventsPerDay(dbsurl,couchurl,outputdict,data_regexp):
     # these status values are for rejected workflows
     rejected_status = ['rejected','rejected-archived']
 
-    basenames_to_print = []
+    basenames_to_print = ['SUS-Spring14miniaod-00017_00029_v0_']
 
     # load requests from json
     header = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -54,6 +54,8 @@ def QueryForRquestedEventsPerDay(dbsurl,couchurl,outputdict,data_regexp):
                           'Filter efficiency' : info[10],
                           'Run white list' : info[11],
                           }
+        if workflowname == 'pdmvserv_SUS-Spring14miniaod-00016_00029_v0__140728_120018_4477':
+            print workflowname,workflow_dict
 
         # filter for data_regexp
         match = False

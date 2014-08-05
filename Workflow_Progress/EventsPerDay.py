@@ -33,26 +33,63 @@ def utcTimestampFromDate(year,month,day):
     
 def utcTimeStringFromUtcTimestamp(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('UTC')).strftime("%d %b %Y")
+    
+def PositiveIntegerWithCommas(number):
+    if number > 0:
+        return ''.join(reversed([x + (',' if i and not i % 3 else '') for i, x in enumerate(reversed(str(number)))]))
 
-def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result):
+    return str(number)
+
+
+def queryDBSForEventsPerDay(dbsapi,dataset,start,end,status,result,verbose,csa):
     # query for all datasets with status using the dataset that can include wildcards
     # use last modification date of block to count events
     # restrict to datasets that have been created 30 days before the start of the query
-    datasets = dbsapi.listDatasets(dataset=dataset,detail=1, dataset_access_type=status)    
-    for dataset in datasets:
-        inp=dataset['dataset']
-        ct = dataset['creation_date']
-        if ct > (start-30*sdays):
-            blocks = dbsapi.listBlocks(dataset=inp, detail=True)
+    if verbose == True:
+        temp_results = {}
+    datasets = []
+    if csa == False:
+        datasets = dbsapi.listDatasets(dataset=dataset, min_cdate=start-30*sdays, max_cdate=end+30*sdays,dataset_access_type=status)    
+    elif csa == True:
+        tmp = dbsapi.listDatasets(dataset=dataset, detail=True, min_cdate=start-30*sdays, max_cdate=end+30*sdays,dataset_access_type=status)
+        operators = ['mmascher', 'spiga', 'riahi', 'mmdali', 'jbalcas', 'sciaba', 'atanasi', 'dciangot', 'vmancine']
+        for ds in tmp:
+            if not ds['creation_date']:
+                continue #some weird datasets we would like to skip
+            #filter out datasets we are not interested in
+            if ds['physics_group_name']=='CRAB3' and ds['create_by'] not in operators and ds['dataset_access_type'] == 'VALID':
+                #take only things that looks like miniAOD productions
+                parents = dbsapi.listDatasetParents(dataset=ds['dataset'])
+                if parents and parents[0]['parent_dataset'].find('Spring14')!=-1:
+                    datasets.append(ds)
+    if len(datasets) > 0:
+        for dataset in datasets:
+            blocks = dbsapi.listBlocks(dataset=dataset['dataset'], detail=True, min_cdate=start-sdays, max_cdate=end+sdays)
+            blockList = {}
             for block in blocks:
-                reply= dbsapi.listBlockSummaries(block_name=block['block_name'])
-                neventsb= reply[0]['num_event']
-                reply=dbsapi.listFiles(block_name=block['block_name'],detail=True)
-                ct=reply[0]['last_modification_date']
-                # use the day of ct at 00:00:00 UTC as identifier
-                ct -= ct%sdays
-                if ct >= start and ct <= end:
-                    result[str(ct)][status] += neventsb
+                blockList[block["block_name"]] = block["last_modification_date"]
+            blockSummaries = []
+            if blockList: 
+                blockSummaries = dbsapi.listBlockSummaries(block_name=blockList.keys(), detail=True)
+            for block in blockSummaries:
+                day = blockList[block['block_name']]
+                # normalize day to 00:00:00 UTC as identifier
+                day -= day%sdays
+                if day >= start and day <= end:
+                    result[str(day)][status] += block['num_evernt']
+                    if verbose == True:
+                        if str(day) not in temp_results.keys(): temp_results[str(day)] = {}
+                        if dataset['dataset'] not in temp_results[str(day)].keys(): temp_results[str(day)][dataset['dataset']] = 0
+                        temp_results[str(day)][dataset['dataset']] += block['num_evernt']
+                        
+    if verbose == True:
+        print ''
+        print 'Status:',status
+        print ''
+        for day in temp_results.keys():
+            for dataset in sorted(temp_results[day], key=temp_results[day].get, reverse=True):
+                print utcTimeStringFromUtcTimestamp(day),dataset,PositiveIntegerWithCommas(temp_results[day][dataset])
+                
     
 
 def main():
@@ -64,6 +101,8 @@ def main():
     parser.add_option("-l", "--length", dest="length", help="Number of days for calculate the accumated events. It is Optional, default is 30 days.", metavar="<length>")
     parser.add_option("-s", "--startdate", dest="startdate", help="Startdate in the form of 2014-06-11, overrides -l", metavar="<startdate>")
     parser.add_option("-d", "--dataset", dest="dataset", help="The dataset name for cacluate the events. Allows to use wildcards, don't forget to escape on the commandline.", metavar="<dataset>")
+    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Verbose output")
+    parser.add_option("-m", "--csa_miniaod", action="store_true", dest="csa", default=False, help="CSA14 mode to query for MINIAOD samples using CSA14 AODSIM as parent")
    
     parser.set_defaults(url="https://cmsweb.cern.ch/dbs/prod/global/DBSReader")
     parser.set_defaults(couchurl="cmssrv101.fnal.gov:7714")
@@ -78,13 +117,15 @@ def main():
     url = opts.url
     dbsapi=DbsApi(url=url)
     couchurl = opts.couchurl
+    verbose = opts.verbose
+    csa = opts.csa
     data = opts.dataset
     data_regexp = data.replace('*','[\w\-]*',99)
 
     # all days are identified by their unix timestamp of 00:00:00 UTC of that day
     # last day to query is yesterday
-    current_date = datetime.datetime.utcnow().date()
-    end = utcTimestampFromDate(current_date.year,current_date.month,current_date.day-1)
+    current_corrected_date = datetime.datetime.utcnow().date()-datetime.timedelta(days=1)
+    end = utcTimestampFromDate(current_corrected_date.year,current_corrected_date.month,current_corrected_date.day)
     # calculate start day
     numdays = int(opts.length)
     start = end - sdays*(numdays)
@@ -93,7 +134,7 @@ def main():
         start = utcTimestampFromDate(int(startdate[0]), int(startdate[1]), int(startdate[2]))
         numdays = (end - start)/sdays
         
-    print 'Querying for events created per day for datasets:',data,'for the time range from',utcTimeStringFromUtcTimestamp(start),'to',utcTimeStringFromUtcTimestamp(end)
+    print 'Querying for events created per day for datasets:',data,'for the time range from',utcTimeStringFromUtcTimestamp(start),'to',utcTimeStringFromUtcTimestamp(end),'starting at',datetime.datetime.utcnow()
 
     # generate basename for input and output files
     # use selected dataset, replace wildcards to make it readable
@@ -109,10 +150,10 @@ def main():
 
                 
     # query
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'VALID',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'PRODUCTION',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'INVALID',result)
-    queryDBSForEventsPerDay(dbsapi,data,start,end,'DEPRECATED',result)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'VALID',result,verbose,csa)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'PRODUCTION',result,verbose,csa)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'INVALID',result,verbose,csa)
+    queryDBSForEventsPerDay(dbsapi,data,start,end,'DEPRECATED',result,verbose,csa)
                     
     # write output to files
     csv_output = open(file_base_name + '.csv','w')

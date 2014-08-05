@@ -19,9 +19,14 @@ def QueryDBSForEvents(dbs3api,pattern,status):
     if len(datasets) > 0:
         for dataset in datasets:
             blocks = dbs3api.listBlocks(dataset=dataset['dataset'], detail=False)
+            blockList = []
             for block in blocks:
-                blockSummaries = dbs3api.listBlockSummaries(block_name=block['block_name'])
-                events += blockSummaries[0]['num_event']
+                blockList.append(block["block_name"])
+            blockSum = []
+            if blockList: 
+                blockSum = dbs3api.listBlockSummaries(block_name=blockList, detail=1)
+            for b in blockSum:
+                events += b['num_evernt']
         return events
     else:
         return None
