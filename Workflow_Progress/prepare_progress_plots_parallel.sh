@@ -14,10 +14,10 @@ source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
 # queries
 cd /afs/cern.ch/user/c/cmst2/progress_plots
 python EventsPerDay.py -d '/*/Fall13-*/GEN-SIM' -s 2013-09-06 &
-python EventsPerDay.py -d '/*/Spring14dr-*/AODSIM' -s 2014-04-30 &
-python EventsPerDay.py -d '/*/Spring14dr-*S14_POSTLS170*/AODSIM' -s 2014-03-30 &
-python EventsPerDay.py -d '/*/Spring14dr-*PU20bx25_POSTLS170*/AODSIM' -s 2014-03-30 &
-python EventsPerDay.py -d '/*/Spring14dr-*PU40bx25_POSTLS170*/AODSIM' -s 2014-07-17
+python EventsPerDay.py -d '/*/Spring14*/AODSIM' -s 2014-04-30 &
+python EventsPerDay.py -d '/*/Spring14*S14_POSTLS170*/AODSIM' -s 2014-03-30 &
+python EventsPerDay.py -d '/*/Spring14*PU20bx25_POSTLS170*/AODSIM' -s 2014-03-30 &
+python EventsPerDay.py -d '/*/Spring14*PU40bx25_POSTLS170*/AODSIM' -s 2014-07-17
 python EventsPerDay.py -d '/*/Spring14*/MINIAODSIM' -s 2014-06-20 &
 python EventsPerDay.py -m -d /*/*/USER -u https://cmsweb.cern.ch/dbs/prod/phys03/DBSReader -s 2014-06-20 &
 
@@ -48,10 +48,10 @@ python DrawStackedPlot.py -d STAR_STAR_AODSIM.json
 python DrawStackedPlot.py -d STAR_STAR_GEN-SIM.json
 python DrawStackedPlot.py -d STAR_Spring14STAR_MINIAODSIM.json
 python DrawStackedPlot.py -d STAR_STAR_USER.json
-python DrawStackedPlot.py -d STAR_Spring14dr-STARPU20bx25_POSTLS170STAR_AODSIM.json
-python DrawStackedPlot.py -d STAR_Spring14dr-STARS14_POSTLS170STAR_AODSIM.json
-python DrawStackedPlot.py -d STAR_Spring14dr-STARPU40bx25_POSTLS170STAR_AODSIM.json
-python DrawStackedPlot.py -d STAR_Spring14dr-STAR_AODSIM.json
+python DrawStackedPlot.py -d STAR_Spring14STARPU20bx25_POSTLS170STAR_AODSIM.json
+python DrawStackedPlot.py -d STAR_Spring14STARS14_POSTLS170STAR_AODSIM.json
+python DrawStackedPlot.py -d STAR_Spring14STARPU40bx25_POSTLS170STAR_AODSIM.json
+python DrawStackedPlot.py -d STAR_Spring14STAR_AODSIM.json
 python DrawStackedPlot.py -d STAR_Summer11STAR_AODSIM.json
 python DrawStackedPlot.py -d STAR_Summer11STAR_GEN-SIM.json
 python DrawStackedPlot.py -d STAR_Summer12STAR_AODSIM.json
@@ -60,10 +60,10 @@ python DrawStackedPlot.py -d STAR_Summer12STAR_GEN-SIM.json
 python DrawOverviewStackedPlots.py -a STAR_STAR_GEN-SIM.json -d STAR_Fall13-STAR_GEN-SIM.json,STAR_STARUpg14STAR_GEN-SIM.json,STAR_Summer12STAR_GEN-SIM.json,STAR_Summer11STAR_GEN-SIM.json
 python DrawOverviewStackedPlots.py -a STAR_STAR_GEN-SIM.json -d STAR_Fall13-STAR_GEN-SIM.json,STAR_STARUpg14STAR_GEN-SIM.json,STAR_Summer12STAR_GEN-SIM.json,STAR_Summer11STAR_GEN-SIM.json -s valid
 
-python DrawOverviewStackedPlots.py -a STAR_STAR_AODSIM.json -d STAR_Spring14dr-STAR_AODSIM.json,STAR_STARUpg14STAR_AODSIM.json,STAR_Summer12STAR_AODSIM.json,STAR_Summer11STAR_AODSIM.json
-python DrawOverviewStackedPlots.py -a STAR_STAR_AODSIM.json -d STAR_Spring14dr-STAR_AODSIM.json,STAR_STARUpg14STAR_AODSIM.json,STAR_Summer12STAR_AODSIM.json,STAR_Summer11STAR_AODSIM.json -s valid
+python DrawOverviewStackedPlots.py -a STAR_STAR_AODSIM.json -d STAR_Spring14STAR_AODSIM.json,STAR_STARUpg14STAR_AODSIM.json,STAR_Summer12STAR_AODSIM.json,STAR_Summer11STAR_AODSIM.json
+python DrawOverviewStackedPlots.py -a STAR_STAR_AODSIM.json -d STAR_Spring14STAR_AODSIM.json,STAR_STARUpg14STAR_AODSIM.json,STAR_Summer12STAR_AODSIM.json,STAR_Summer11STAR_AODSIM.json -s valid
 
-python DrawOverviewStackedPlots.py -a STAR_Spring14dr-STAR_AODSIM.json -d STAR_Spring14dr-STARPU40bx25_POSTLS170STAR_AODSIM.json,STAR_Spring14dr-STARPU20bx25_POSTLS170STAR_AODSIM.json,STAR_Spring14dr-STARS14_POSTLS170STAR_AODSIM.json
+python DrawOverviewStackedPlots.py -a STAR_Spring14STAR_AODSIM.json -d STAR_Spring14STARPU40bx25_POSTLS170STAR_AODSIM.json,STAR_Spring14STARPU20bx25_POSTLS170STAR_AODSIM.json,STAR_Spring14STARS14_POSTLS170STAR_AODSIM.json
 
 python DrawOverviewStackedPlots.py -a STAR_STARUpg14STAR_AODSIM.json -d STAR_STARUpg14STARPU50bx25STAR_AODSIM.json,STAR_STARUpg14STARPU140bx25STAR_AODSIM.json
 
