@@ -19,7 +19,7 @@ python EventsPerDay.py -d '/*/Spring14*S14_POSTLS170*/AODSIM' -s 2014-03-30 &
 python EventsPerDay.py -d '/*/Spring14*PU20bx25_POSTLS170*/AODSIM' -s 2014-03-30 &
 python EventsPerDay.py -d '/*/Spring14*PU40bx25_POSTLS170*/AODSIM' -s 2014-07-17
 python EventsPerDay.py -d '/*/Spring14*/MINIAODSIM' -s 2014-06-20 &
-python EventsPerDay.py -m -d /*/*/USER -u https://cmsweb.cern.ch/dbs/prod/phys03/DBSReader -s 2014-06-20 &
+python EventsPerDay.py -m -d '/*/*/USER' -u https://cmsweb.cern.ch/dbs/prod/phys03/DBSReader -s 2014-06-20 &
 
 python EventsPerDay.py -d '/*/*Upg14*/AODSIM' -s 2014-04-27 &
 python EventsPerDay.py -d '/*/*Upg14*PU50bx25*/AODSIM' -s 2014-04-27

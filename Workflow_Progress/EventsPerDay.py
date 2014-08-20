@@ -113,7 +113,6 @@ def main():
     if not (opts.dataset):
         parser.print_help()
         parser.error('either --dataset or --datatier is required')	
-        
     url = opts.url
     dbsapi=DbsApi(url=url)
     couchurl = opts.couchurl

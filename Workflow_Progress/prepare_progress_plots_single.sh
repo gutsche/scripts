@@ -19,7 +19,7 @@ cd /afs/cern.ch/user/c/cmst2/progress_plots
 #python EventsPerDay.py -d '/*/Spring14*PU20bx25_POSTLS170*/AODSIM' -s 2014-03-30
 #python EventsPerDay.py -d '/*/Spring14*PU40bx25_POSTLS170*/AODSIM' -s 2014-07-17
 #python EventsPerDay.py -d '/*/Spring14*/MINIAODSIM' -s 2014-06-20
-#python EventsPerDay.py -m -d /*/*/USER -u https://cmsweb.cern.ch/dbs/prod/phys03/DBSReader -s 2014-06-20
+#python EventsPerDay.py -m -d '/*/*/USER' -u https://cmsweb.cern.ch/dbs/prod/phys03/DBSReader -s 2014-06-20
 
 #python EventsPerDay.py -d '/*/*Upg14*/AODSIM' -s 2014-04-27
 #python EventsPerDay.py -d '/*/*Upg14*PU50bx25*/AODSIM' -s 2014-04-27
@@ -73,4 +73,4 @@ cd /afs/cern.ch/user/c/cmst2/progress_plots
 #curl "http://dashb-cms-prod.cern.ch/dashboard/request.py/condorjobnumbers_individual?sites=All%20T3210&sitesSort=7&jobTypes=&start=&end=&timeRange=lastWeek&granularity=Hourly&sortBy=3&series=All&type=p" > pending.png
 
 # copy to www
-cp -f *.png *.txt *.gif *.pdf *.csv *.json /afs/cern.ch/user/c/cmst2/www/progress_plots/
+#cp -f *.png *.txt *.gif *.pdf *.csv *.json /afs/cern.ch/user/c/cmst2/www/progress_plots/
