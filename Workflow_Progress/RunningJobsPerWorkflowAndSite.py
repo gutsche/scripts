@@ -44,7 +44,7 @@ def printWorkflowsPerSite(sitenamepattern, excludesitepattern, sites, workflow_i
                     completion = workflow_info[name]['% Complete']
                     status = workflow_info[name]['Status']
                     type = workflow_info[name]['Task type']
-                print "%7i %7s %5s%% %s(%s,%s)" % (local[name]['running'],str(priority),str(completion),name,type,status)
+                    print "%7i %7s %5s%% %s(%s,%s)" % (local[name]['running'],str(priority),str(completion),name,type,status)
             else:
                 print "%7i %s" % (local[name]['running'],name)
             sum+=local[name]['running']
