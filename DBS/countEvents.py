@@ -7,6 +7,23 @@ from optparse import OptionParser
 import urllib,json
 from dbs.apis.dbsClient import DbsApi
 
+def formatSize(size):
+    output = ''
+    if size < 1E3:
+        output += "%i B" % size
+    elif size < 1E6:
+        output += "%.3f kB" % (float(size)/1E3)
+    elif size < 1E9:
+        output += "%.3f MB" % (float(size)/1E6)
+    elif size < 1E12:
+        output += "%.3f GB" % (float(size)/1E9)
+    elif size < 1E15:
+        output += "%.3f TB" % (float(size)/1E12)
+    elif size < 1E18:
+        output += "%.3f PB" % (float(size)/1E15)
+
+    return output
+    
 def PositiveIntegerWithCommas(number):
     if number > 0:
         return ''.join(reversed([x + (',' if i and not i % 3 else '') for i, x in enumerate(reversed(str(number)))]))
@@ -15,6 +32,7 @@ def PositiveIntegerWithCommas(number):
 
 def QueryDBSForEvents(dbs3api,pattern,status):
     events = 0
+    size = 0
     datasets = dbs3api.listDatasets(dataset=pattern, dataset_access_type=status)
     if len(datasets) > 0:
         for dataset in datasets:
@@ -27,9 +45,10 @@ def QueryDBSForEvents(dbs3api,pattern,status):
                 blockSum = dbs3api.listBlockSummaries(block_name=blockList, detail=1)
             for b in blockSum:
                 events += b['num_evernt']
-        return events
+                size += b['file_size']
+        return (events,size)
     else:
-        return None
+        return (None,None)
 
 
 def main():
@@ -53,37 +72,60 @@ def main():
         parser.error('--dataset is required')
 
     print "Query for pattern:",pattern
-    total = 0
+    total_events = 0
+    total_size = 0
+
     status = "PRODUCTION"
-    production_events = QueryDBSForEvents(dbs3api,pattern,status)
+    (production_events,production_size) = QueryDBSForEvents(dbs3api,pattern,status)
     if production_events == None:
         if verbose == True:
             print 'No datasets in status PRODUCTION found for pattern:',pattern
+        production_events = 0
     else:
-        total += production_events
+        total_events += production_events
+    if production_size == None:
+        if verbose == True:
+            print 'No datasets in status PRODUCTION found for pattern:',pattern
+        production_size = 0
+    else:
+        total_size += production_size
 
     if invalid == True:
         status = "INVALID"
-        invalid_events = QueryDBSForEvents(dbs3api,pattern,status)
+        (invalid_events,invalid_size) = QueryDBSForEvents(dbs3api,pattern,status)
         if invalid_events == None:
             if verbose == True:
                 print 'No datasets in status INVALID found for pattern:',pattern
+            invalid_events = 0
         else:
-            total += invalid_events
+            total_events += invalid_events
+        if invalid_size == None:
+            if verbose == True:
+                print 'No datasets in status INVALID found for pattern:',pattern
+            invalid_size = 0
+        else:
+            total_size += invalid_size
 
     status = "VALID"
-    valid_events = QueryDBSForEvents(dbs3api,pattern,status)
+    (valid_events,valid_size) = QueryDBSForEvents(dbs3api,pattern,status)
     if valid_events == None:
         if verbose == True:
             print 'No datasets in status VALID found for pattern:',pattern
+        valid_events = 0
     else:
-        total += valid_events
+        total_events += valid_events
+    if valid_size == None:
+        if verbose == True:
+            print 'No datasets in status VALID found for pattern:',pattern
+        valid_size = 0
+    else:
+        total_size += valid_size
 
-    print "status: %10s events: %13s" % ('PRODUCTION',PositiveIntegerWithCommas(production_events))
-    print "status: %10s events: %13s" % ('VALID',PositiveIntegerWithCommas(valid_events))
+    print "status: %10s events: %13s size: %13s" % ('PRODUCTION',PositiveIntegerWithCommas(production_events),formatSize(production_size))
+    print "status: %10s events: %13s size: %13s" % ('VALID',PositiveIntegerWithCommas(valid_events),formatSize(valid_size))
     if invalid == True:
-        print "status: %10s events: %13s" % ('INVALID',PositiveIntegerWithCommas(invalid_events))
-    print "total:  %10s events: %13s" % ("",PositiveIntegerWithCommas(total))
+        print "status: %10s events: %13s size: %13s" % ('INVALID',PositiveIntegerWithCommas(invalid_events),formatSize(invalid_size))
+    print "total:  %10s events: %13s size: %13s" % ("",PositiveIntegerWithCommas(total_events),formatSize(total_size))
     
 if __name__ == "__main__":
     main()
