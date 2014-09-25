@@ -15,14 +15,19 @@ def PositiveIntegerWithCommas(number):
 
 def QueryDBSForEvents(dbs3api,pattern,status):
     events = 0
+    size = 0
     datasets = dbs3api.listDatasets(dataset=pattern, dataset_access_type=status)
     for dataset in datasets:
         blocks = dbs3api.listBlocks(dataset=dataset['dataset'], detail=False)
         for block in blocks:
             blockSummaries = dbs3api.listBlockSummaries(block_name=block['block_name'])
             events += blockSummaries[0]['num_event']
+            size += blockSummaries[0]['file_size']
             
-    return events
+    if size == 0:
+        return events
+    else:
+        return size/events
 
 
 def main():
@@ -36,23 +41,24 @@ def main():
     url = opts.url
     dbs3api = DbsApi(url)
 
-    pattern = "/*/Fall13-*/GEN-SIM"
+    pattern = "/*/Spring14*/MINIAODSIM"
     # pattern = "/*/Spring14dr*/AODSIM"
+    # PositiveIntegerWithCommas(events)
     print "Query for pattern:",pattern
     total = 0
     status = "PRODUCTION"
     events = QueryDBSForEvents(dbs3api,pattern,status)
     total += events
-    print "status: %10s events: %13s" % (status,PositiveIntegerWithCommas(events))
+    print "status: %10s events: %.2f" % (status,events)
     status = "INVALID"
     events = QueryDBSForEvents(dbs3api,pattern,status)
     total += events
-    print "status: %10s events: %13s" % (status,PositiveIntegerWithCommas(events))
+    print "status: %10s events: %.2f" % (status,events)
     status = "VALID"
     events = QueryDBSForEvents(dbs3api,pattern,status)
     total += events
-    print "status: %10s events: %13s" % (status,PositiveIntegerWithCommas(events))
-    print "total:  %10s events: %13s" % ("",PositiveIntegerWithCommas(total))
+    print "status: %10s events: %.2f" % (status,events)
+    print "total:  %10s events: %.2f" % ("",total)
     
 if __name__ == "__main__":
     main()
