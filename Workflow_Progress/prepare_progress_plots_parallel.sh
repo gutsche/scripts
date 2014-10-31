@@ -1,15 +1,13 @@
 # initialization
-export CMS_PATH=/afs/cern.ch/cms
-source $CMS_PATH/cmsset_default.sh
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc6_amd64_gcc481
 
 echo "CERN working environment"
-cd /afs/cern.ch/user/c/cmst2/Software/CMSSW_5_3_18/src
-eval `scramv1 runtime -sh`
+cd /afs/cern.ch/user/c/cmst2/Software/CMSSW_7_3_X_2014-10-31-1000/src
+eval `scram runtime -sh`
 cd
-echo "CERN UI environment"
-source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh
 echo "CERN CRAB configuration"
-source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
+source /cvmfs/cms.cern.ch/crab/crab.sh
 
 # queries
 cd /afs/cern.ch/user/c/cmst2/progress_plots
