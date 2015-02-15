@@ -72,6 +72,17 @@ ensure_ticket()
       expiretm=$(/bin/date -j -f "%b %d %H:%M:%S %Y" +%s "$expires" 2>/dev/null)
       ;;
 
+      Darwin:14.* )
+  	  # Issued                Expires               Principal
+  	  # Aug  3 12:56:56 2012  Aug  4 12:56:51 2012  krbtgt/CERN.CH@CERN.CH
+        expires=$(klist 2>/dev/null | grep krbtgt | awk '{print $5, $6, $7, $8}')
+        if [[ "$expires" == *Expired* ]]
+        then
+            expires="Jan 1 00:00:00 2012"
+        fi
+        expiretm=$(/bin/date -j -f "%b %d %H:%M:%S %Y" +%s "$expires" 2>/dev/null)
+        ;;
+
 
     * )
       # Valid starting     Expires            Service principal
