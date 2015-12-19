@@ -42,7 +42,7 @@ def main():
             if do_nothing:
                 print "DO NOTHING: creating directory",dest_dir
             else:
-                os.mkdir(dest_dir)
+                os.makedirs(dest_dir)
         # rename file
         if verbose:
             print "renaming",actiondict[file],'to',file
