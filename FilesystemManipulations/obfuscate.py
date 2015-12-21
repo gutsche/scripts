@@ -92,6 +92,7 @@ def main():
         print "Input directories to be cleaned up:",tmp_dirs
     # remove directories
     for dir in tmp_dirs:
+        if dir == path: continue
         dir_to_be_removed = os.path.join(path,dir)
         if verbose:
             print "directory to be removed:",dir_to_be_removed
