@@ -49,7 +49,10 @@ def main():
         if do_nothing:
             print "DO NOTHING: renaming",actiondict[file],'to',file
         else:
-            os.rename(actiondict[file],file)
+            try:
+                os.rename(actiondict[file],file)
+            except:
+                print "file:",actiondict[file],"could not be found"
 
 if __name__ == "__main__":
     main()

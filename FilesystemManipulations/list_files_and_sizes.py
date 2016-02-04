@@ -57,7 +57,6 @@ def main():
                     print 'error: found same size:',tmpsize,' for two different files'
                     print 'file 1:',actiondict[tmpsize]
                     print 'file 2:',tmpfile
-                    sys.exit(1)
 
     # store actiondict in json file
     json_output = open(outputfilename,'w')
