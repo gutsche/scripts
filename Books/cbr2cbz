@@ -1,0 +1,18 @@
+#bin/bash
+
+start_directory=`pwd`
+
+for cbr in "$@"
+do
+	cbz=`basename "$cbr" .cbr`.cbz
+	tempdir=`mktemp -d -t temp`
+	cd "$tempdir"
+	unrar e -inul "$start_directory/$cbr"
+	if [ -e ~/Desktop/cover.jpg ]
+	then
+		cp ~/Desktop/cover.jpg "0000000000.jpg"
+	fi
+	zip -q "$start_directory/$cbz" *
+	cd "$start_directory"
+	rm -rf "$tempdir"
+done
