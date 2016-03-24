@@ -5,6 +5,7 @@ Host *.cern.ch *.fnal.gov *.mit.edu
 
 Host *.fnal.gov
   PreferredAuthentications gssapi-with-mic,gssapi,password
+  GSSAPIKeyExchange yes
 
 Host lxvoadm*.cern.ch lxplus*.cern.ch cmslpc*.fnal.gov cmscvs.cern.ch
   PreferredAuthentications gssapi-with-mic,gssapi,password
@@ -15,7 +16,7 @@ Host lxvoadm*.cern.ch lxplus*.cern.ch cmslpc*.fnal.gov cmscvs.cern.ch
 Host lxplus*.cern.ch
   DynamicForward 47170
 
-Host cmslpc-sl5.fnal.gov
+Host cmslpc-sl6.fnal.gov
   DynamicForward 47270
 
 Host lxvoadm*.cern.ch vo*.cern.ch cms*.cern.ch lxbuild*.cern.ch macms*.cern.ch cmslpc*.fnal.gov cmssrv*.fnal.gov
