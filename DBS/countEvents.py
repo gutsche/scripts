@@ -44,7 +44,7 @@ def QueryDBSForEvents(dbs3api,pattern,status):
             if blockList: 
                 blockSum = dbs3api.listBlockSummaries(block_name=blockList, detail=1)
             for b in blockSum:
-                events += b['num_evernt']
+                events += b['num_event']
                 size += b['file_size']
         return (events,size)
     else:
