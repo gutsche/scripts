@@ -5,7 +5,7 @@
 if [ "$1" == "sw" ]; then
    echo "CMS software environment"
    source /cvmfs/cms.cern.ch/cmsset_default.sh
-   export SCRAM_ARCH=slc6_amd64_gcc491
+   export SCRAM_ARCH=slc6_amd64_gcc530
 elif [ "$1" == "crab2" ]; then
    echo "CRAB2 configuration"
    source /cvmfs/cms.cern.ch/crab/crab.sh
@@ -15,10 +15,10 @@ elif [ "$1" == "crab3" ]; then
 elif [ "$1" == "go" ]; then
    echo "Working environment"
    source /cvmfs/cms.cern.ch/cmsset_default.sh
-   export SCRAM_ARCH=slc6_amd64_gcc491
-   source /cvmfs/cms.cern.ch/crab/crab.sh
-   cd $GUTCODEDIR/CMSSW_7_4_7/src
+   export SCRAM_ARCH=slc6_amd64_gcc530
+   cd $GUTCODEDIR/CMSSW_8_0_5/src
    cmsenv
+   source /cvmfs/cms.cern.ch/crab3/crab.sh
    cd
 else
    echo "Please give configuration"
