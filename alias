@@ -1,36 +1,17 @@
-alias l='ls -lh --color=always'
-alias ll='ls -lha --color=always'
-
-alias dbs='dbs search --production --noheader'
-alias das='das_client.py --limit=0 --format=plain '
+alias l='ls -lhG'
+alias ll='ls -lhaG'
 
 alias cp='cp -vi'
 alias mv='mv -vi'
-alias du='du -h --max-depth=1'
-alias df='df -h'
+alias du='du -h -d 1'
+alias df='df -H'
 
-alias ssh='ssh -CX'
+alias gzip='gzip -9'
 
 alias ..='cd ..'
 alias ...='cd ../..'
 
-alias psu='ps -u gutsche -o pid,etime,command'
-alias top='top -d.2 -u gutsche'
-
-alias less=vi
-
-alias cmsenv='eval `scramv1 runtime -sh`'
-alias cmsrel='scramv1 project CMSSW'
-alias scrrt='eval `scram runtime -sh`'
-alias scrrtv1='eval `scramv1 run -sh`'
-
-alias xterm='xterm -geometry 150x50 -cc "33:48,37:48,45-47:48,38:48" -sb -rightbar -sl 1000'
-
-alias root='root.exe -l'
-
-alias sw='source $SCRIPTHOME/mysetup sw'
-alias crab2='source $SCRIPTHOME/mysetup crab2'
-alias crab3='source $SCRIPTHOME/mysetup crab3'
-alias go='source $SCRIPTHOME/mysetup go'
-
 alias c="tr '\n' ' '"
+
+alias lp='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@cmslpc-sl6.fnal.gov'
+alias lx='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@lxplus091.cern.ch'
