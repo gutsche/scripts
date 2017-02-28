@@ -11,7 +11,6 @@ alias gzip='gzip -9'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-<<<<<<< HEAD
 alias psu='ps -u gutsche -o pid,etime,command'
 alias top='top -d.2 -u gutsche'
 

@@ -1,40 +1,48 @@
-#
-# Oli's Mac OS X bashrc
-#
-# echo ""
-# echo "	Oli's Mac OS X bash"
-# echo ""
+# $SCRIPTHOME/bashrc
 
-# load aliases
-test -f ~/.alias && . ~/.alias
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
 
-# prompt
-export PS1="GutSierraMiniBook:\W> "
+# alias
+if [ -f $SCRIPTHOME/alias ]; then
+    . $SCRIPTHOME/alias
+fi
 
-# less
-export LESS="-i -M"
+# scripts
+export PATH=~/scripts:~/scripts/cvs_scripts:$PATH
+export PATH=$SCRIPTHOME/DAS:$PATH
 
-# display for x
-#export DISPLAY=127.0.0.1:0.0
+# pythonpath
+export PYTHONPATH=$SCRIPTHOME/DAS:$PYTHONPATH
 
-# local bin
-export PATH=$PATH:/usr/X11/bin:.
+# rpl
+export RPL_DIR=rpl
+export RPL_VERSION=1.4.0
+export PATH=$EXTERNAL_SOFT/$RPL_DIR/$RPL_VERSION/bin:$PATH
+export MANPATH=$EXTERNAL_SOFT/$RPL_DIR/$RPL_VERSION/man:$PATH
 
-# proxy-ssh
-export PATH=$PATH:/Users/gutsche/Documents/scripts/Kerberos/
+# ssh access for cvs
+export CVS_RSH=ssh 
+export CVSROOT=':gserver:cmssw.cvs.cern.ch:/local/reps/CMSSW'
 
-# root
-export ROOTSYS=/Users/gutsche/Software/root_v6.06.02
-export PATH=$ROOTSYS/bin:$PATH
-export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH 
-export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
+# set if interactive
+if [ -n "$PS1" ]; then
 
-# CVS ROOT
-export CVS_RSH=ssh
-export CVSROOT=gutsche@cmscvs.cern.ch:/local/reps/CMSSW
+   # fix vi backspace
+   stty erase '^?'
 
-# fnal cert
-export PATH=$PATH:/usr/local/get-cert
+   # prompt
+   export PS1="\h:\W> "
+
+   # resize the shell at last 
+   # resize
+
+   # add additional mapping to beginning of line for inside a screen session
+   bind '"\C-p": beginning-of-line'
+
+fi
 
 md() {
   mkdir -p "$@" && cd "$@"
