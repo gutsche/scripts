@@ -1,0 +1,80 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "homebridge-temperature-ganglia",
+        "scope": null,
+        "escapedName": "homebridge-temperature-ganglia",
+        "name": "homebridge-temperature-ganglia",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/usr/local/lib/node_modules"
+    ]
+  ],
+  "_from": "homebridge-temperature-ganglia@latest",
+  "_id": "homebridge-temperature-ganglia@1.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/homebridge-temperature-ganglia",
+  "_nodeVersion": "4.2.0",
+  "_npmUser": {
+    "name": "bahlo",
+    "email": "hallo@arne.me"
+  },
+  "_npmVersion": "2.14.7",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "homebridge-temperature-ganglia",
+    "scope": null,
+    "escapedName": "homebridge-temperature-ganglia",
+    "name": "homebridge-temperature-ganglia",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/homebridge-temperature-ganglia/-/homebridge-temperature-ganglia-1.0.0.tgz",
+  "_shasum": "f0908d4f5b9305526791e1aad65901a88801795d",
+  "_shrinkwrap": null,
+  "_spec": "homebridge-temperature-ganglia",
+  "_where": "/usr/local/lib/node_modules",
+  "author": {
+    "name": "Arne Bahlo",
+    "email": "hallo@arne.me"
+  },
+  "dependencies": {},
+  "description": "Simulate a temperature sensor from ganglia",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "f0908d4f5b9305526791e1aad65901a88801795d",
+    "tarball": "https://registry.npmjs.org/homebridge-temperature-ganglia/-/homebridge-temperature-ganglia-1.0.0.tgz"
+  },
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
+  },
+  "gitHead": "ac0d5aa55e8a5100212b7205a4ec8de4d8d1e033",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "bahlo",
+      "email": "hallo@arne.me"
+    }
+  ],
+  "name": "homebridge-temperature-ganglia",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}

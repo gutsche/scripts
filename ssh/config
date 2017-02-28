@@ -1,0 +1,13 @@
+Host bd.rc.princeton.edu
+    User ogutsche
+
+Host *.cern.ch *.fnal.gov
+    GSSAPIAuthentication yes
+#    GSSAPITrustDNS yes
+    GSSAPIDelegateCredentials yes
+	
+Host lxplus*.cern.ch cmslpc*.fnal.gov
+    ForwardX11 yes
+    ForwardX11Trusted yes
+	
+

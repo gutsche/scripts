@@ -1,0 +1,35 @@
+modules {
+  module {
+    name = "ganglia_temp_sensor"
+    language = "python"
+  }
+  module {
+    name = "ganglia_motion_sensor"
+    language = "python"
+  }
+}
+
+collection_group {
+  collect_every = 60
+  time_threshold = 180
+  metric {
+    name = "Temperature"
+    value_threshold = 1.0
+    title = "Temperature"
+  }
+  metric {
+    name = "Humidity"
+    value_threshold = 1.0
+    title = "Humidity"
+  }
+}
+
+collection_group {
+  collect_every = 5
+  time_threshold = 10
+  metric {
+    name = "Motion"
+    value_threshold = 1.0
+    title = "Motion"
+  }
+}

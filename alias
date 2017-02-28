@@ -1,19 +1,17 @@
-alias l='ls -lh --color=always'
-alias ll='ls -lha --color=always'
-
-alias dbs='dbs search --production --noheader'
-alias das='das_client.py --limit=0 --format=plain '
+alias l='ls -lhG'
+alias ll='ls -lhaG'
 
 alias cp='cp -vi'
 alias mv='mv -vi'
-alias du='du -h --max-depth=1'
-alias df='df -h'
+alias du='du -h -d 1'
+alias df='df -H'
 
-alias ssh='ssh -CX'
+alias gzip='gzip -9'
 
 alias ..='cd ..'
 alias ...='cd ../..'
 
+<<<<<<< HEAD
 alias psu='ps -u gutsche -o pid,etime,command'
 alias top='top -d.2 -u gutsche'
 
@@ -36,3 +34,6 @@ alias spark='source $SCRIPTHOME/mysetup spark'
 alias jupyter='source $SCRIPTHOME/mysetup jupyter'
 
 alias c="tr '\n' ' '"
+
+alias lp='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@cmslpc-sl6.fnal.gov'
+alias lx='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@lxplus091.cern.ch'
