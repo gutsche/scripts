@@ -32,5 +32,7 @@ alias sw='source $SCRIPTHOME/mysetup sw'
 alias crab2='source $SCRIPTHOME/mysetup crab2'
 alias crab3='source $SCRIPTHOME/mysetup crab3'
 alias go='source $SCRIPTHOME/mysetup go'
+alias spark='source $SCRIPTHOME/mysetup spark'
+alias jupyter='source $SCRIPTHOME/mysetup jupyter'
 
 alias c="tr '\n' ' '"

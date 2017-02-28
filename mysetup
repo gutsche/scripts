@@ -20,6 +20,16 @@ elif [ "$1" == "go" ]; then
    cmsenv
    source /cvmfs/cms.cern.ch/crab3/crab.sh
    cd
+elif [ "$1" == "spark" ]; then
+   source /cvmfs/sft.cern.ch/lcg/views/dev3/Tue/x86_64-slc6-gcc49-opt/setup.sh
+   source /afs/cern.ch/work/v/vkhriste/public/spark-root-testdata/hadoop-confext/hadoop-setconf.sh analytix
+   unset PYSPARK_PYTHON
+   unset PYSPARK_DRIVER_PYTHON
+   export PYTHONPATH=$PYTHONPATH:/afs/cern.ch/user/v/vkhriste/public/histogrammar-1.0.6
+elif [ "$1" == "jupyter" ]; then
+   export PYSPARK_DRIVER_PYTHON=/cvmfs/sft-nightlies.cern.ch/lcg/views/dev3/Tue/x86_64-slc6-gcc49-opt/bin/jupyter-notebook
+   export PYSPARK_DRIVER_PYTHON_OPTS="--ip=`hostname` --browser='/dev/null' --port=8888"
+   pyspark --packages org.diana-hep:spark-root_2.11:0.1.7 --conf spark.dynamicAllocation.enabled=false --executor-cores 4 --num-executors 60 --master yarn --py-files /afs/cern.ch/user/v/vkhriste/public/histogrammar-1.0.6.zip
 else
    echo "Please give configuration"
 fi
