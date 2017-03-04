@@ -36,3 +36,8 @@ alias c="tr '\n' ' '"
 
 alias lp='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@cmslpc-sl6.fnal.gov'
 alias lx='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@lxplus091.cern.ch'
+
+alias tmn='k5reauth -f -i 3600 -p GUTSCHE -k /afs/cern.ch/user/g/gutsche/.ssh/GUTSCHE.keytab -- tmux new-session -s cern'
+alias tmr='tmux attach-session -t cern' 
+
+alias nkt='kinit -k -t /afs/cern.ch/user/g/gutsche/.ssh/GUTSCHE.keytab GUTSCHE@CERN.CH'
