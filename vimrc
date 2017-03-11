@@ -9,7 +9,6 @@ set autoindent             " always indent
 set bs=indent,eol,start    " allow backspacing over everything in insert mode
 set splitbelow             " make the new window appear below the current window
 set splitright             " make the new window appear to the right of the current window
-set background=dark        " set background color
 set clipboard=unnamed      " system clipboard for osx
 set shiftwidth=4           " Use 4 spaces for tabs
 set tabstop=4              " Use 4 spaces for tabs
@@ -17,7 +16,6 @@ set expandtab
 set smartindent
 
 let python_highlight_all=1 " make python pretty
-colorscheme solarized      " color scheme
 syntax on                  " syntax highlighting on
 filetype plugin on
 filetype plugin indent on  " required
@@ -108,3 +106,6 @@ function! s:align()
 		call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
 	endif
 endfunction
+
+set background=dark        " set background color
+colorscheme solarized      " color scheme
