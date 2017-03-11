@@ -17,11 +17,8 @@ export PATH=$SCRIPTHOME/DAS:$PATH
 # pythonpath
 export PYTHONPATH=$SCRIPTHOME/DAS:$PYTHONPATH
 
-# rpl
-export RPL_DIR=rpl
-export RPL_VERSION=1.4.0
-export PATH=$EXTERNAL_SOFT/$RPL_DIR/$RPL_VERSION/bin:$PATH
-export MANPATH=$EXTERNAL_SOFT/$RPL_DIR/$RPL_VERSION/man:$PATH
+# sbt
+export PATH=$EXTERNAL_SOFT/sbt-launcher-packaging-0.13.13/bin:$PATH
 
 # ssh access for cvs
 export CVS_RSH=ssh 
