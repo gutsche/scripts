@@ -114,7 +114,8 @@ if has ('autocmd')
     augroup markdown
         autocmd BufNewFile,BufReadPost *.md 
                     \ set filetype=markdown |
-                    \ set textwidth=80
+                    " \ set textwidth=80 |
+                    " \ filetype plugin indent off
     augroup end
     augroup c
         au bufread,bufnewfile *.c,*.h match badwhitespace /\s\+$/
