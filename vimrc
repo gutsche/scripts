@@ -29,7 +29,7 @@ set pastetoggle=<F2>                     " toggle paste mode to insert a lot of 
 set expandtab                            " insert space characters whenever the tab key is pressed
 
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 " call vundle#begin('~/.vim/vundle_plugins')
@@ -50,6 +50,7 @@ Plugin 'gabrielelana/vim-markdown'
 " Plugin 'vim-scripts/indentpython.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'henrik/vim-reveal-in-finder'
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
