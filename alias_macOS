@@ -1,0 +1,22 @@
+alias l='ls -lhG'
+alias ll='ls -lhaG'
+
+alias cp='cp -vi'
+alias mv='mv -vi'
+alias du='du -h -d 1'
+alias df='df -H'
+
+alias gzip='gzip -9'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+
+alias c="tr '\n' ' '"
+
+alias vi=vim
+
+alias lp='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@cmslpc-sl6.fnal.gov'
+alias lx='/Users/gutsche/Documents/scripts/Kerberos/proxy-ssh gutsche@lxplus011.cern.ch'
+
+alias tmn='tmux new-session -s local'
+alias tmr='tmux attach-session -t local'
