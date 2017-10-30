@@ -29,8 +29,9 @@ url = opts.url
 results = {}
 dbs_query_results = {}
 datatiers = {}
-datatiers['data'] = ['RAW','RECO','AOD','RAW-RECO','USER']
-datatiers['mc'] = ['GEN','GEN-SIM','GEN-RAW','GEN-SIM-RECO','AODSIM']
+datatiers['data'] = ['RAW','RECO','AOD','RAW-RECO','USER', 'MINIAOD']
+datatiers['mc'] = ['GEN','GEN-SIM','GEN-RAW','GEN-SIM-RECO','AODSIM',
+'MINIAODSIM']
 separations = ['PromptReco','PromptSkim']
 exclusion_strings = {}
 exclusion_strings['mc'] = ['test','backfill','jobrobot','sam','bunnies','penguins']
