@@ -23,7 +23,7 @@ else
     touch $lockFile
 	
 	# loop over all *.ts files in tvShowsDirectory
-	FilesFound=$(find  "$tvShowsDirectory" -type f -name "*.ts" -print)
+	FilesFound=$(find  "$tvShowsDirectory" -not -path '*/\.*' -type f -name "*.ts" -print)
 	IFSbkp="$IFS"
 	IFS=$'\n'
 	for file in $FilesFound; do
