@@ -1,7 +1,11 @@
-#!/urs/bin/env python
+#!/urs/bin/env python3
 # -*- coding: utf-8 -*-
 import sys, re, time, argparse, os, math
-import sqlite3
+import sqlite3, shutil
+from subprocess import Popen, PIPE
+from datetime import datetime
+
+current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 def convertToInteger (s):
     return int.from_bytes(s.encode(), 'little')
@@ -69,6 +73,7 @@ def open_db_file(db_file_name):
     create_table(conn,'media','id','integer')
     create_colum(conn,'media','name','text','')
     create_colum(conn,'media','capacity','integer',0)
+    create_colum(conn,'media','free','integer',0)
     create_colum(conn,'media','last_update','text','')
 
     # table files
@@ -133,11 +138,53 @@ def get_id_for_media(connection_list,media_name):
         if int(queried_media_ids[0]) != generated_media_id:
             print('ERROR: For name \"%s\", the queried id %i is not equal the generated id %i!' % (media_name,int(queried_media_ids[0]),generated_media_id) )
             sys.exit(1)
-    # else:
-        # add row to media table
-        # add_row_to_table('media',generated_media_id,media_name)
+    else:
+        # gather free space on media_name
+        total, used, free = shutil.disk_usage(media_name)
+        # for zfs volumes, total is not correct, use zpool status command to get total
+        if total == used+free:
+            # this is a zfs volume
+            process = Popen(['zpool', 'list', '-pH', '-o', 'size', media_name.replace('/Volumes/','')], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = process.communicate()
+            total = int(stdout.strip())
+        # add row to table
+        add_row_to_table(connection_list,'media',{'id': generated_media_id, 'name': media_name, 'capacity': total, 'free': free, 'last_update': current_date_time})
 
     return generated_media_id
+
+def add_row_to_table(connection_list,table_name,values):
+    """
+
+    add row to table
+
+    """
+
+    for connection in connection_list:
+        c = connection.cursor()
+        try:
+            column_list_string = ','.join(list(values.keys()))
+            value_list_string = ''
+            for key in values.keys():
+                if isinstance(values[key], str):
+                    value_list_string = value_list_string + '\'' + values[key] + '\','
+                else:
+                    value_list_string = value_list_string + str(values[key]) + ','
+            value_list_string = value_list_string[:-1]
+            c.execute("INSERT INTO {tn} ({cls}) VALUES ({vls})".\
+            format(tn=table_name, cls=column_list_string, vls=value_list_string))
+            if verbose == True:
+                print('SUCCESS: inserted into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
+        except sqlite3.IntegrityError:
+            if verbose == True:
+                print('ERROR: ID %i already exists in PRIMARY KEY column %s' % (values['id'],'id'))
+                print('ERROR: something went wrong inserting into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
+        except:
+            if verbose == True:
+                print('ERROR: something went wrong inserting into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
+
+        c.close()
+
+    return 0
 
 
 
@@ -163,6 +210,8 @@ def update_from_directory(connection_list,top_directory,project_list):
             print('Gathered information for %i files in project dir \"%s\"' % (counter,project_dir))
 
     media_id = get_id_for_media(connection_list,top_directory)
+    if verbose == True:
+        print('ID of external media with top directory \"%s\": %i' % (top_directory,media_id))
 
 def main(args):
     """
