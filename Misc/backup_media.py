@@ -1,19 +1,32 @@
 #!/urs/bin/env python3
-# -*- coding: utf-8 -*-
 import sys, re, time, argparse, os, math
 import sqlite3, shutil
 from subprocess import Popen, PIPE
 from datetime import datetime
+import shutil
+import hashlib
+"""
+todo: use DB-API’s parameter substitution: https://docs.python.org/3/library/sqlite3.html
 
-current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+"""
 
-def convertToInteger (s):
-    return int.from_bytes(s.encode(), 'little')
 
-def convertFromInteger (n):
-    return n.to_bytes(math.ceil(n.bit_length() / 8), 'little').decode()
-
+# global variables
+current_date_object = datetime.now()
 verbose =  False
+table_columns = {}
+
+def from_date_object_to_string(input_date_object):
+    return str(input_date_object.strftime('%Y-%m-%d %H:%M:%S'))
+
+def from_date_object_to_filename_string(input_date_object):
+    return str(input_date_object.strftime('%Y%m%d_%H%M%S'))
+
+def from_string_to_date_object(input_string):
+    return datetime.strptime(input_string,'%Y-%m-%d %H:%M:%S')
+
+def convertToInteger(s):
+    return int(hashlib.md5(s.encode('utf-8')).hexdigest()[:8], 16)
 
 def create_table(db_connection,table_name,column_name,column_type):
     """
@@ -22,8 +35,7 @@ def create_table(db_connection,table_name,column_name,column_type):
     """
     c = db_connection.cursor()
     try:
-        c.execute('create table {tn} ({cn} {ct} primary key)'\
-        .format(tn=table_name,cn=column_name,ct=column_type))
+        c.execute('create table ? (? ? primary key)', [table_name,column_name,column_type])
         if verbose == True:
             print('Table \"%s\" not found, creating it with column \"%s\" as primary key'\
             % (table_name,column_name))
@@ -41,8 +53,7 @@ def create_colum(db_connection,table_name,column_name,column_type,column_default
     """
     c = db_connection.cursor()
     try:
-        c.execute('alter table {tn} add column "{cn}" {ct} default "{cd}"'\
-        .format(tn=table_name,cn=column_name,ct=column_type,cd=column_default))
+        c.execute('alter table ? add column \'?\' ? default \'?\'', [table_name,column_name,column_type,column_default])
         if verbose == True:
             print('Column \"%s\" not found in table \"%s\", creating it with type \"%s\" and default \"%s\"'\
             % (column_name,table_name,column_type,column_default))
@@ -53,7 +64,19 @@ def create_colum(db_connection,table_name,column_name,column_type,column_default
     c.close()
     return 0
 
+def index_in_column_list(colum_list,column_name):
+    """
 
+    return index of column_name in column_list for sql selection
+    add 1 for primary key 'id' omitted from column_list
+
+    """
+    try:
+        index = column_list.index(column_name)
+        return index+1
+    except:
+        print('Column {name} could not be found in list \'{list}\''.format(name=column_name,list='\',\''.join(colum_list)))
+        sys.exit(1)
 
 def open_db_file(db_file_name):
     """
@@ -70,6 +93,8 @@ def open_db_file(db_file_name):
     # field name: name of media, type TEXT
     # field capacity: capacity of media[bytes], type INTEGER
     # field last_update: date/time of last update, type TEXT
+    global table_columns
+    table_columns['media'] = ['name','capacity','free','last_update']
     create_table(conn,'media','id','integer')
     create_colum(conn,'media','name','text','')
     create_colum(conn,'media','capacity','integer',0)
@@ -79,14 +104,13 @@ def open_db_file(db_file_name):
     # table files
     # field id: hash of name, type TEXT
     # field media_id: key from media table, type TEXT
-    # field name: name of media file, type TEXT
-    # field path: path relative to top level on media, type TEXT
+    # field name: name of media file including project name, type TEXT
     # field size: size[bytes], type INTEGER
     # field last_update: date/time of last update, type TEXT
+    table_columns['files'] = ['media_id','name','size','last_update']
     create_table(conn,'files','id','integer')
     create_colum(conn,'files','media_id','text','')
     create_colum(conn,'files','name','text','')
-    create_colum(conn,'files','path','text','')
     create_colum(conn,'files','size','integer',0)
     create_colum(conn,'files','last_update','text','')
 
@@ -103,94 +127,70 @@ def close_db(db_file_connection):
     db_file_connection.close()
     return 0
 
-def get_id_for_media(connection_list,media_name):
+def get_id_for_media(connection,media_name):
     """
     for a given media_name, check the id in the media table
     if the media does not have an entry, create it
     """
-
+    # generate media id from media_name
     generated_media_id = convertToInteger(media_name)
-    queried_media_ids = []
-    for connection in connection_list:
-        c = connection.cursor()
-        c.execute('select id from media where name="{name}"'\
-        .format(name=media_name))
-        rows = c.fetchall()
-        if len(rows) > 1:
-            print('ERROR: name \"%s\" cannot have more than one entry in media table!' % media_name)
-            sys.exit(1)
-        if len(rows) == 1:
-            queried_media_ids.append(rows[0])
-        c.close()
-    # check if the name has entries in the media table
-    if len(queried_media_ids)> 0:
-        # check if the different connections have the same id
-        id = 0
-        for item in queried_media_ids:
-            if id == 0:
-                id = int(item)
-            else:
-                if id != int(item):
-                    print('ERROR: List of queried media ids for name \"%s\" are not the same for all connections: %s' % (media_name,','.join(queried_media_ids)))
-                    sys.exit(1)
 
-        # check that queried id is equal to generated id
-        if int(queried_media_ids[0]) != generated_media_id:
-            print('ERROR: For name \"%s\", the queried id %i is not equal the generated id %i!' % (media_name,int(queried_media_ids[0]),generated_media_id) )
-            sys.exit(1)
-    else:
-        # gather free space on media_name
-        total, used, free = shutil.disk_usage(media_name)
-        # for zfs volumes, total is not correct, use zpool status command to get total
-        if total == used+free:
-            # this is a zfs volume
-            process = Popen(['zpool', 'list', '-pH', '-o', 'size', media_name.replace('/Volumes/','')], stdout=PIPE, stderr=PIPE)
-            stdout, stderr = process.communicate()
-            total = int(stdout.strip())
-        # add row to table
-        add_row_to_table(connection_list,'media',{'id': generated_media_id, 'name': media_name, 'capacity': total, 'free': free, 'last_update': current_date_time})
+    # gather free space on media_name
+    total, used, free = shutil.disk_usage(media_name)
+    # for zfs volumes, total is not correct, use zpool status command to get total
+    if total == used+free:
+        # this is a zfs volume
+        process = Popen(['zpool', 'list', '-pH', '-o', 'size', media_name.replace('/Volumes/','')], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate()
+        total = int(stdout.strip())
+    update_row_in_table(connection,'media',generated_media_id, {'name': media_name, 'capacity': total, 'free': free, 'last_update': from_date_object_to_string(current_date_object)})
 
     return generated_media_id
 
-def add_row_to_table(connection_list,table_name,values):
+def update_row_in_table(connection,table_name,id,row_values):
     """
 
-    add row to table
+    update row in table:
+    if id exists in table and last_update in table < last_update in input, update all table values
+    if id does not exist, add to table
 
     """
 
-    for connection in connection_list:
-        c = connection.cursor()
-        try:
-            column_list_string = ','.join(list(values.keys()))
-            value_list_string = ''
-            for key in values.keys():
-                if isinstance(values[key], str):
-                    value_list_string = value_list_string + '\'' + values[key] + '\','
-                else:
-                    value_list_string = value_list_string + str(values[key]) + ','
-            value_list_string = value_list_string[:-1]
-            c.execute("INSERT INTO {tn} ({cls}) VALUES ({vls})".\
-            format(tn=table_name, cls=column_list_string, vls=value_list_string))
-            if verbose == True:
-                print('SUCCESS: inserted into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
-        except sqlite3.IntegrityError:
-            if verbose == True:
-                print('ERROR: ID %i already exists in PRIMARY KEY column %s' % (values['id'],'id'))
-                print('ERROR: something went wrong inserting into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
-        except:
-            if verbose == True:
-                print('ERROR: something went wrong inserting into \"%s\" the values \"%s\"' % (column_list_string,value_list_string))
+    sql_update_column_string = ''
+    sql_insert_column_string = ''
+    for column_name in table_columns[table_name]:
+        sql_update_column_string += '{name}=?, '.format(name=column_name)
+        sql_insert_column_string += '?, '
+    sql_update_column_string = sql_update_column_string[:-2]
+    sql_insert_column_string = sql_insert_column_string[:-2]
+    column_value_list = list(row_values.values())
 
-        c.close()
+    c = connection.cursor()
+    try:
+        # try inserting new row; if id already exists, update row if update_date in db is older than update_date in row_values
+        sql_string = 'insert into {table} ({columns}) values ({column_values})'.format(table=table_name, columns=','.join(['id'] + table_columns[table_name]),column_values='?, ' + sql_insert_column_string)
+        tuple = [str(id)] + column_value_list
+        if verbose == True:
+            print('Inserting into table with sql command \"{sql}\" and values \'{values}\'.'.format(sql=sql_string, values='\',\''.join(map(str,tuple))))
+        c.execute(sql_string,tuple)
+    except sqlite3.IntegrityError:
+        # update row if update_date in db is older than update_date in row_values
+        sql_string = 'update {table} set {columns} where id=?'.format(table=table_name,columns=sql_update_column_string)
+        tuple = column_value_list+[id]
+        if verbose == True:
+            print('Updating in table with sql command \"{sql}\" and values \'{values}\'.'.format(sql=sql_string, values='\',\''.join(map(str,tuple))))
+        c.execute(sql_string,tuple)
+    except sqlite3.Error as err:
+        print("SQLITE3 error: {0}".format(err))
+        print('Problem updating table \'{table}\' for id \'{key}\' with values \'{values}\''.format(table=table_name, key=id, values=row_values))
+        sys.exit(1)
 
+    c.close()
     return 0
 
-
-
-def update_from_directory(connection_list,top_directory,project_list):
+def update_from_directory(connection,top_directory,project_list):
     """
-    update the databases in the connection list with all media files in the project_list in the top_directory
+    update the database from the connection with all media files in the project_list in the top_directory
     """
 
     # loop over files in directory and gather all needed information
@@ -204,14 +204,19 @@ def update_from_directory(connection_list,top_directory,project_list):
                     name = project_dir + '/' + file
                     id = convertToInteger(name)
                     size = os.path.getsize(root + '/' + file)
-                    filelist[str(id)] = {'name' : name, 'size' : size}
+                    filelist[id] = {'name' : name, 'size' : size}
                     counter += 1
         if verbose == True:
             print('Gathered information for %i files in project dir \"%s\"' % (counter,project_dir))
 
-    media_id = get_id_for_media(connection_list,top_directory)
+    # get id of media from media table
+    media_id = get_id_for_media(connection,top_directory)
     if verbose == True:
         print('ID of external media with top directory \"%s\": %i' % (top_directory,media_id))
+
+    # add entries to files table_name
+    for file_id in filelist.keys():
+        update_row_in_table(connection,'files',file_id, {'media_id': media_id,'name': filelist[file_id]['name'], 'size': filelist[file_id]['size'], 'last_update': from_date_object_to_string(current_date_object)})
 
 def main(args):
     """
@@ -232,18 +237,27 @@ def main(args):
     global verbose
     verbose = args.verbose
     projects = args.project
-    print (projects)
+    # default for projects
+    if len(projects) <= 0:
+        projects = ['Movies']
+
+    # backup central db file, assume extension is .sqlite
+    central_db_file_name = args.central_db_file_location + '/' + args.db_file_name
+    backup_central_db_file_name = args.central_db_file_location + '/' + args.db_file_name.replace('.sqlite','_' + from_date_object_to_filename_string(current_date_object) + '.sqlite')
+    try:
+        shutil.copy(central_db_file_name,backup_central_db_file_name)
+    except:
+        if verbose == True:
+            print('WARNING: Previous SQL database file did not exist')
 
     # open db files on external media and from central location
-    central_db_file_connection = open_db_file(args.central_db_file_location + '/' + args.db_file_name)
-    external_media_db_file_connection = open_db_file(args.external_media_top_directory + '/' + args.db_file_name)
+    central_db_file_connection = open_db_file(central_db_file_name)
 
     # update from information from media folder on central server
-    update_from_directory([central_db_file_connection,external_media_db_file_connection],args.server_media_top_directory,projects)
+    update_from_directory(central_db_file_connection,args.server_media_top_directory,projects)
 
     # close external media and central db central db files
     close_db(central_db_file_connection)
-    close_db(external_media_db_file_connection)
 
 if __name__ == '__main__':
     main(sys.argv)
