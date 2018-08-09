@@ -1,3 +1,4 @@
 #!/usr/local/bin/zsh
 touch $1
+echo $1 | sed -e 's/.md//' | awk '{print "## "$0"\n"}' >> $1
 open $1
