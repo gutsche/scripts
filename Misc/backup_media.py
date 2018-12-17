@@ -17,6 +17,7 @@ verbose =  0
 table_columns = {}
 server_projects = []
 backup_projects = []
+file_operations = {}
 
 def argparser_str_to_bool(s):
     """Convert string to bool (in argparse context)."""
@@ -447,9 +448,6 @@ def copy_file_to_external_media(connection,destination_table_name,media_name,id,
     update db
     """
 
-    if verbose > 1:
-        print("Trying to copy file {name} to external media".format(name=os.path.join(media_name,project,filename)))
-
     # source file check
     sourcefile = os.path.join(media_name,project,filename)
     if os.path.isfile(sourcefile) == False:
@@ -475,62 +473,30 @@ def copy_file_to_external_media(connection,destination_table_name,media_name,id,
     copy_media_capacity = all_rows[0][2]
     copy_media_free = all_rows[0][3]
 
-    # check if media_name is mounted
-    exists = os.path.exists(copy_media_name)
-    while exists == False:
-        answer = None
-        abort = False
-        question = 'Please mount external media: {media} and continue with yes (y) or abort with no (n): '.format(media=copy_media_name)
-        while answer not in ('y','yes','n','no'):
-            answer = input(question)
-            if answer == 'y':
-                abort = False
-            elif answer == 'yes':
-                abort = False
-            elif answer == 'n':
-                abort = True
-            elif answer == 'no':
-                abort = True
-            else:
-                print(question)
-        if abort == True:
-            break
-        else:
-            exists = os.path.exists(copy_media_name)
-    if exists == False:
-        # mouting of media_name aborted
-        print('Copy of file: {name} to media {media_name} was aborted'.format(name=os.path.join(project,filename),media_name=copy_media_name))
-        return False
+    # copy file
+    if project.find("_Ext") > 0:
+        # source file on backup media
+        destination_project = project.replace("_Ext","")
     else:
-        # copy file
-        if project.find("_Ext") > 0:
-            # source file on backup media
-            destination_project = project.replace("_Ext","")
-        else:
-            # source file on server
-            destination_project = project + "_Ext"
-        destinationfile = os.path.join(copy_media_name,destination_project,filename)
-        try:
-            shutil.copy(sourcefile,destinationfile)
-        except IOError as io_err:
-            os.makedirs(os.path.dirname(destinationfile))
-            shutil.copy(sourcefile,destinationfile)
-        # update secondary table
-        update_row_in_table(connection, \
-                            destination_table_name,id, \
-                            { 'media_id': copy_media_id, \
-                            'name': os.path.join(project,filename), \
-                            'project': destination_project, \
-                            'filename': filename, \
-                            'size': size, \
-                            'last_update': from_date_object_to_string(current_date_object)})
-        # update media table
-        update_info_for_media(connection, copy_media_id, copy_media_name, copy_media_capacity, copy_media_free-size)
-        if verbose > 0:
-            print("Copied {source} to {destination}".format(source=sourcefile,destination=destinationfile))
-        return True
+        # source file on server
+        destination_project = project + "_Ext"
+    destinationfile = os.path.join(copy_media_name,destination_project,filename)
+    # insert operation into file_operations
+    if copy_media_name not in file_operations.keys(): file_operations[copy_media_name] = []
+    file_operations[copy_media_name].append({"action" : "copy", "source" : sourcefile, "destination" : destinationfile})
 
-    return False
+    # update secondary table
+    update_row_in_table(connection, \
+                        destination_table_name,id, \
+                        { 'media_id': copy_media_id, \
+                        'name': os.path.join(project,filename), \
+                        'project': destination_project, \
+                        'filename': filename, \
+                        'size': size, \
+                        'last_update': from_date_object_to_string(current_date_object)})
+    # update media table
+    update_info_for_media(connection, copy_media_id, copy_media_name, copy_media_capacity, copy_media_free-size)
+    return True
 
 def delete_file_from_external_media(connection,table_name,media_name,id,project,filename,size):
     """
@@ -540,55 +506,25 @@ def delete_file_from_external_media(connection,table_name,media_name,id,project,
     return True if file was deleted
     """
 
-    if verbose > 1:
-        print("Trying to delete file {name}".format(name=os.path.join(media_name,project,filename)))
-
     file = os.path.join(media_name,project,filename)
 
-    # check if file exists
-    exists = os.path.isfile(file)
-    while exists == False:
-        answer = None
-        abort = False
-        question = 'Please mount external media: {media} and continue with yes (y) or abort with no (n): '.format(media=media_name)
-        while answer not in ('y','yes','n','no'):
-            answer = input(question)
-            if answer == 'y':
-                abort = False
-            elif answer == 'yes':
-                abort = False
-            elif answer == 'n':
-                abort = True
-            elif answer == 'no':
-                abort = True
-            else:
-                print(question)
-        if abort == True:
-            break
-        else:
-            exists = os.path.isfile(file)
-    if exists == False:
-        # mouting of media_name aborted
-        print('Deletion of file: {file} was aborted'.format(file=file))
-        return False
-    else:
-        os.remove(file)
-        # remove from table table_name
-        c = connection.cursor()
-        try:
-            sql_string = 'DELETE FROM {table} WHERE id = {id}'.format(id=id,table=table_name)
-            c.execute(sql_string)
-        except sqlite3.Error as err:
-            print("SQLITE3 error: {0}".format(err))
-        c.close()
-        # update media table
-        (media_id, media_name_2, capacity, free, last_updated) = get_info_for_media(connection,media_name)
-        free += size
-        update_info_for_media(connection, media_id, media_name, capacity, free)
-        print('Deleted file: {file}'.format(file=file))
-        return True
+    # insert operation into file_operations
+    if media_name not in file_operations.keys(): file_operations[media_name] = []
+    file_operations[media_name].append({"action" : "delete","source" : file})
 
-    return False
+    # remove from table table_name
+    c = connection.cursor()
+    try:
+        sql_string = 'DELETE FROM {table} WHERE id = {id}'.format(id=id,table=table_name)
+        c.execute(sql_string)
+    except sqlite3.Error as err:
+        print("SQLITE3 error: {0}".format(err))
+    c.close()
+    # update media table
+    (media_id, media_name_2, capacity, free, last_updated) = get_info_for_media(connection,media_name)
+    free += size
+    update_info_for_media(connection, media_id, media_name, capacity, free)
+    return True
 
 def check_for_differences_and_act(connection,primary_table_name,secondary_table_name,mode):
     """
@@ -663,6 +599,78 @@ def check_for_file_size_differences_and_delete_inconsistencies_from_backup(conne
             # print("Deleting file: {file} from table {table}".format(file=os.path.join(local_media_name,entry['project'],entry['filename']),table=secondary_table_name))
             delete_file_from_external_media(connection,secondary_table_name,local_media_name,entry['id'],entry['project'],entry['filename'],entry['size'])
 
+def execute_file_operations():
+    if verbose > 2:
+        print("Following file operations will be executed")
+        for media_name in sorted(file_operations.keys()):
+            print('Media {media}'.format(media=media_name))
+            for operation in file_operations[media_name]:
+                if operation['action'] == "delete":
+                    print("Deletion of {source}".format(source=operation["source"]))
+            for operation in file_operations[media_name]:
+                if operation['action'] == "copy":
+                    print("Copy of {source} to {destination}".format(source=operation["source"],destination=operation["destination"]))
+
+    for media_name in sorted(file_operations.keys()):
+        # check if media_name is mounted
+        exists = os.path.exists(media_name)
+        while exists == False:
+            answer = None
+            abort = False
+            question = 'Please mount external media: {media} and continue with yes (y) or abort with no (n): '.format(media=media_name)
+            while answer not in ('y','yes','n','no'):
+                answer = input(question)
+                if answer == 'y':
+                    abort = False
+                elif answer == 'yes':
+                    abort = False
+                elif answer == 'n':
+                    abort = True
+                elif answer == 'no':
+                    abort = True
+                else:
+                    print(question)
+            if abort == True:
+                break
+            else:
+                exists = os.path.exists(media_name)
+        if exists == False:
+            # mouting of media_name aborted
+            print('Operations on media {media_name} were aborted'.format(media_name=media_name))
+        else:
+            # execute operations, first deletions, then copy
+            for operation in file_operations[media_name]:
+                if operation["action"] == "delete" :
+                    if verbose > 1:
+                        print("Trying to delete file {source} on media {media}".format(source=operation["source"],media=media_name))
+                    try:
+                        os.remove(operation["source"])
+                        if verbose > 0:
+                            print("Deleted file {source} on media {media}".format(source=operation["source"],media=media_name))
+                    except IOError as io_err:
+                        if verbose > 1:
+                            print("{0}".format(io_err))
+                        print("Could not delete file {source} on media {media}".format(source=operation["source"],media=media_name))
+
+            for operation in file_operations[media_name]:
+                if operation["action"] == "copy" :
+                    if verbose > 1:
+                        print("Trying to copy file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                    try:
+                        shutil.copy(operation["source"],operation["destination"])
+                        if verbose > 0:
+                            print("Copied file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                    except IOError as io_err:
+                        os.makedirs(os.path.dirname(operation["destination"]))
+                        try:
+                            shutil.copy(operation["source"],operation["destination"])
+                            if verbose > 0:
+                                print("Copied file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                        except IOError as io_err:
+                            if verbose > 1:
+                                print("{0}".format(io_err))
+                            print("Could not copy source {source} to destination {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+
 def main(args):
     """
 
@@ -673,7 +681,7 @@ def main(args):
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", "-v", action="count", help="Increase the verbosity level by increasing -v, -vv, -vvv", default=0)
-    parser.add_argument("--central_db_file_location", action="store", default = "~/Documents/Private/Projects/Backup", help="Location of centrally stored db file")
+    parser.add_argument("--central_db_file_location", action="store", default = "~/DropBox/Private/Projects/Backup", help="Location of centrally stored db file")
     parser.add_argument("--server_media_top_directory", action="store", default = "/Volumes/Media", help="Location of central server media top directory")
     parser.add_argument("--external_media_top_directory", action="store", default = None, help="Top media directory on external media")
     parser.add_argument("--db_file_name", action="store", default = "media_backup.sqlite", help="Name of media backup db file")
@@ -717,6 +725,12 @@ def main(args):
     for project in server_projects:
         backup_projects.append(project+"_Ext")
 
+    # create dictionary for file operations
+    # key is media_name
+    # value is dictionary for operation
+    global file_operations
+    file_operations = {}
+
     # clean up db file Location
     central_db_file_location = args.central_db_file_location
     if central_db_file_location.find("~") >= 0 or central_db_file_location.find('$HOME') >= 0:
@@ -757,6 +771,9 @@ def main(args):
         check_for_file_size_differences_and_delete_inconsistencies_from_backup(central_db_file_connection,"server_files","backup_files")
         # check for files that don't have a backup yet on external media and need to be copied
         check_for_differences_and_act(central_db_file_connection,"server_files","backup_files","copy")
+
+    # execute file Operations
+    execute_file_operations()
 
     # close external media and central db central db files
     close_db(central_db_file_connection)
