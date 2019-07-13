@@ -6,9 +6,9 @@
 lockFile='/tmp/plexPostProcessing.lock'
 updateFile='/tmp/plexPostProcessingUpdate.lock'
 plexPostLog='/tmp/plexPostProcessing.log'
-tvShowsDirectory="/Volumes/Media/TV Shows"
+tvShowsDirectory="/Media/TV Shows"
 time=`date '+%Y-%m-%d %H:%M:%S'`
-handbrake=/Volumes/Home/gutsche/.bin/HandBrakeCLI/HandBrakeCLI
+handbrake=/usr/bin/HandBrakeCLI
 
 echo "'$time' Plex DVR Postprocessing script started" | tee -a $plexPostLog
 
@@ -21,15 +21,15 @@ else
     # Create lock file to prevent other post-processing from running simultaneously
     echo "'$time' Creating lock file" | tee -a $plexPostLog
     touch $lockFile
-	
+
 	# loop over all *.ts files in tvShowsDirectory
 	FilesFound=$(find  "$tvShowsDirectory" -not -path '*/\.*' -type f -name "*.ts" -print)
 	IFSbkp="$IFS"
 	IFS=$'\n'
 	for file in $FilesFound; do
 		echo "'$time' Processing $file" | tee -a $plexPostLog
-		outFile="${file%.ts}.m4v"
-		$handbrake -i "$file" -o "$outFile" --preset="HQ 1080p30 Surround" -O | tee -a $plexPostLog
+		outFile="${file%.ts}.mkv"
+		$handbrake -i "$file" -o "$outFile" --preset="H.265 MKV 1080p30" -O | tee -a $plexPostLog
 		# remove input file if handrake is successful and output file exists
 		if [ $? -eq 0 ]; then
 			if [ -f "$outFile" ]; then
@@ -41,20 +41,17 @@ else
 		fi
 	done
 	IFS="$IFSbkp"
-	
+
 	# update plex TV shows library if updateFile exists
 	if [ -f $updateFile ]
 	then
 		echo "'$time' updating TV Shows library in PLEX" | tee -a $plexPostLog
-		curl http://127.0.0.1:32400/library/sections/7/refresh?X-Plex-Token=<token>
+		curl http://192.168.96.40:32400/library/sections/7/refresh?X-Plex-Token=i2xnPDGP5xhEoYfPyxFq
 	    echo "'$time' Removing PLEX library update lock file" | tee -a $plexPostLog
 		rm $updateFile
 	fi
-	
+
     #Remove lock file
     echo "'$time' All done! Removing lock" | tee -a $plexPostLog
     rm $lockFile
 fi
-
-
-		
