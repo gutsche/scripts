@@ -46,7 +46,7 @@ else
 	if [ -f $updateFile ]
 	then
 		echo "'$time' updating TV Shows library in PLEX" | tee -a $plexPostLog
-		curl http://192.168.96.40:32400/library/sections/7/refresh?X-Plex-Token=i2xnPDGP5xhEoYfPyxFq
+		curl http://192.168.96.40:32400/library/sections/7/refresh?X-Plex-Token=<token>
 	    echo "'$time' Removing PLEX library update lock file" | tee -a $plexPostLog
 		rm $updateFile
 	fi
