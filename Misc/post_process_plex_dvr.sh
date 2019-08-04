@@ -7,6 +7,7 @@ lockFile='/tmp/plexPostProcessing.lock'
 updateFile='/tmp/plexPostProcessingUpdate.lock'
 plexPostLog='/tmp/plexPostProcessing.log'
 tvShowsDirectory="/Media/TV Shows"
+HDMoviesDirectory="/Media/HD Movies"
 time=`date '+%Y-%m-%d %H:%M:%S'`
 handbrake=/usr/bin/HandBrakeCLI
 
@@ -23,9 +24,11 @@ else
     touch $lockFile
 
 	# loop over all *.ts files in tvShowsDirectory
-	FilesFound=$(find  "$tvShowsDirectory" -not -path '*/\.*' -type f -name "*.ts" -print)
+	FilesFoundTV=$(find  "$tvShowsDirectory" -not -path '*/\.*' -type f -name "*.ts" -print)
+	FilesFoundMovies=$(find  "$HDMoviesDirectory" -not -path '*/\.*' -type f -name "*.ts" -print)
 	IFSbkp="$IFS"
 	IFS=$'\n'
+	FilesFound="${FilesFoundTV}${IFS}${FilesFoundMovies}"
 	for file in $FilesFound; do
 		echo "'$time' Processing $file" | tee -a $plexPostLog
 		outFile="${file%.ts}.mkv"
@@ -45,9 +48,10 @@ else
 	# update plex TV shows library if updateFile exists
 	if [ -f $updateFile ]
 	then
-		echo "'$time' updating TV Shows library in PLEX" | tee -a $plexPostLog
-		curl http://192.168.96.40:32400/library/sections/7/refresh?X-Plex-Token=<token>
-	    echo "'$time' Removing PLEX library update lock file" | tee -a $plexPostLog
+		echo "'$time' updating TV Shows and Movies libraries in PLEX" | tee -a $plexPostLog
+		curl http://192.168.96.40:32400/library/sections/7/refresh?X-Plex-Token=<fillme>
+        curl http://192.168.96.40:32400/library/sections/6/refresh?X-Plex-Token=<fillme>
+        echo "'$time' Removing PLEX library update lock file" | tee -a $plexPostLog
 		rm $updateFile
 	fi
 
