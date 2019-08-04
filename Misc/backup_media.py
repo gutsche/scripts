@@ -7,7 +7,7 @@ from pathlib import Path
 import shutil
 import hashlib
 """
-todo: use DB-API’s parameter substitution: https://docs.python.org/3/library/sqlite3.html
+todo: use DB-APIs parameter substitution: https://docs.python.org/3/library/sqlite3.html
 
 """
 
@@ -168,7 +168,7 @@ def get_id_for_media(connection,media_name):
     # for zfs volumes, total is not correct, use zpool status command to get total
     if total == used+free:
         # this is a zfs volume
-        process = Popen(['zpool', 'list', '-pH', '-o', 'size', media_name.replace('/Volumes/','')], stdout=PIPE, stderr=PIPE)
+        process = Popen(['zpool', 'list', '-pH', '-o', 'size', media_name.replace('/Volumes','').replace('/','')], stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate()
         total = int(stdout.strip())
     update_row_in_table(connection,'media',generated_media_id, {'name': media_name, 'capacity': total, 'free': free, 'last_update': from_date_object_to_string(current_date_object)})
@@ -681,8 +681,8 @@ def main(args):
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", "-v", action="count", help="Increase the verbosity level by increasing -v, -vv, -vvv", default=0)
-    parser.add_argument("--central_db_file_location", action="store", default = "~/DropBox/Private/Projects/Backup", help="Location of centrally stored db file")
-    parser.add_argument("--server_media_top_directory", action="store", default = "/Volumes/Media", help="Location of central server media top directory")
+    parser.add_argument("--central_db_file_location", action="store", default = "~/Dropbox/Private/Projects/Backup", help="Location of centrally stored db file")
+    parser.add_argument("--server_media_top_directory", action="store", default = "/Media", help="Location of central server media top directory")
     parser.add_argument("--external_media_top_directory", action="store", default = None, help="Top media directory on external media")
     parser.add_argument("--db_file_name", action="store", default = "media_backup.sqlite", help="Name of media backup db file")
     parser.add_argument("--project", action="append", default = [], help="Name of a directory in the media top directory")
