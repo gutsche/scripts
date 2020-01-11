@@ -465,7 +465,7 @@ def copy_file_to_external_media(connection,destination_table_name,media_name,id,
     c.close()
 
     if len(all_rows) < 1:
-        print("Could not find room for file {name} of size {size} on known external media, please add empty media.".format(name=name,size=size))
+        print("Could not find room for file {name} of size {size} on known external media, please add empty media.".format(name=filename,size=size))
         return False
 
     copy_media_id = all_rows[0][0]
