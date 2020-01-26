@@ -18,6 +18,7 @@ mysides remove Downloads
 mysides remove gutsche
 
 mysides add Private file:///Volumes/External/Dropbox/Private/
+mysides add Notes file:///Volumes/External/Dropbox/Notes
 mysides add Slides file:///Volumes/External/Dropbox/Work/Slides/
 mysides add Meetings file:///Volumes/External/Dropbox/Work/Meetings/
 mysides add Presentations file:///Volumes/External/Dropbox/Work/Presentations/
