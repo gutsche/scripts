@@ -13,17 +13,20 @@ central_timezone = pytz.timezone('US/Central')
 utc_timezone = pytz.timezone('UTC')
 day_delta = datetime.timedelta(days=1)
 
-def calculate_comed_cost(utc_start,utc_end,kwh):
+def calculate_comed_cost(utc_start,utc_end,input_kwh):
     """
 
     query comed and caluclate cost for kwh
 
     """
 
+    kwh = float(input_kwh)
     if kwh == 0.:
         if verbose >= 1:
             print("Input kwh is 0.0, returning zero cost")
         return 0.0
+    if verbose >= 3:
+        print("Input kwh is {0}".format(kwh))
 
     if verbose >= 3:
         print('Retrieving hourly pricing information from comed for {0} to {1}'.format(utc_start.strftime('%Y%m%d%H%M'),utc_end.strftime('%Y%m%d%H%M')))
@@ -50,10 +53,10 @@ def calculate_comed_cost(utc_start,utc_end,kwh):
     # input parameter for cost calculation
     Average_Consumption_Per_Month = 600 #[kWh]
     Capcity_Obligation = 1.41 #[kWh]
-    Electricity_Supply_Charge =  11.79 #[$$]
+    Electricity_Supply_Charge =  10.04 #[$$]
     Transmission_Service_Charge =  0.00786 #[$$/kWh]
     Capacity_Charge =  5.90209 #[$$/kWh]
-    Purchased_Electricity_Adjustment =  -2.83000 #[$$]
+    Purchased_Electricity_Adjustment =  -0.93333 #[$$]
     Misc_Procurement_Component_Chg =  0.00091 #[$$/kWh]
     Customer_charge =  11.30000 #[$$]
     Standard_Metering_Charge = 4.52000 #[$$]
@@ -65,9 +68,9 @@ def calculate_comed_cost(utc_start,utc_end,kwh):
     Energy_Efficiency_Programs =  0.00132 #[$$/kWh]
     Energy_Efficiency_Adjustment = 0 #[$$/kWh]
     Peak_Time_Savings = 0 #[$$]
-    Franchise_Cost =  0.99000 #[$$]
-    State_Tax =  1.87000 #[$$]
-    Municipal_Tax = 3.55000 #[$$]
+    Franchise_Cost =  0.99333 #[$$]
+    State_Tax =  1.87333 #[$$]
+    Municipal_Tax = 3.55667 #[$$]
 
     # calculate cost for consumed
     cost = average_kwh_price * kwh
