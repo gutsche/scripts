@@ -135,6 +135,8 @@ def main(args):
         starttime = utc_timezone.localize(row[1])
         endtime = utc_timezone.localize(row[2])
         kwh = row[16]
+        if kwh == None:
+            kwh = 0.0
         cost = row[17]
         if cost == None:
             cost = 0.0
