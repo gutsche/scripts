@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 19,
+  "id": 20,
   "links": [],
   "panels": [
     {
@@ -47,7 +47,7 @@
       "description": "Server: Busy state of all CPU cores together",
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 2,
         "x": 0,
         "y": 1
       },
@@ -100,7 +100,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.40:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.40:9100\",job=~\"node\"}) by (cpu))",
@@ -112,16 +112,81 @@
           "step": 900
         }
       ],
-      "title": "Server: CPU Busy",
+      "title": "Server: CPU",
       "type": "gauge"
     },
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Pi-Hole: Busy state of all CPU cores together",
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 2,
+        "x": 2,
+        "y": 1
+      },
+      "id": 64,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "mappings": [
+              {
+                "$$hashKey": "object:133",
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 100,
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "orientation": "horizontal",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "expr": "sum(nvidia_gpu_duty_cycle) / sum(nvidia_gpu_num_devices)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "title": "Server: GPU",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "description": "Pi-Hole: Busy",
+      "gridPos": {
+        "h": 4,
+        "w": 2,
         "x": 4,
         "y": 1
       },
@@ -174,7 +239,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.55:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.55:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.55:9100\",job=~\"node\"}) by (cpu))",
@@ -192,11 +257,11 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Downstairs Camera: Busy state of all CPU cores together",
+      "description": "Downstairs Camera: CPU",
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 8,
+        "w": 2,
+        "x": 6,
         "y": 1
       },
       "id": 23,
@@ -248,7 +313,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}) by (cpu))",
@@ -266,11 +331,11 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Garage Camera: Busy state of all CPU cores together",
+      "description": "Garage Camera: CPU",
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 11,
+        "w": 2,
+        "x": 8,
         "y": 1
       },
       "id": 60,
@@ -322,7 +387,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}) by (cpu))",
@@ -340,9 +405,84 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
+      "description": "Garage Camera: CPU",
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 2,
+        "x": 10,
+        "y": 1
+      },
+      "id": 66,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 100,
+            "min": 0,
+            "nullValueMode": "null",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "rgba(50, 172, 45, 0.97)",
+                  "value": null
+                },
+                {
+                  "color": "rgba(237, 129, 40, 0.89)",
+                  "value": 85
+                },
+                {
+                  "color": "rgba(245, 54, 54, 0.9)",
+                  "value": 95
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "orientation": "horizontal",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}) by (cpu))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 900
+        }
+      ],
+      "title": "Upstairs Camera: CPU",
+      "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 4,
+        "w": 2,
         "x": 0,
         "y": 5
       },
@@ -395,7 +535,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
@@ -409,7 +549,63 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Server: Average Core Temperature",
+      "title": "Server: CPU Temp",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 2,
+        "y": 5
+      },
+      "id": 90,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "celsius"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "expr": "nvidia_gpu_temperature_celsius",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server: GPU Temp",
       "type": "gauge"
     },
     {
@@ -417,7 +613,7 @@
       "datasource": "Prometheus",
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 2,
         "x": 4,
         "y": 5
       },
@@ -470,7 +666,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.55:9243\"}",
@@ -484,7 +680,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "PiHole: Average Core Temperature",
+      "title": "Pi-Hole: CPU Temp",
       "type": "gauge"
     },
     {
@@ -492,8 +688,8 @@
       "datasource": "Prometheus",
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 8,
+        "w": 2,
+        "x": 6,
         "y": 5
       },
       "id": 47,
@@ -545,7 +741,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.70:9243\"}",
@@ -559,7 +755,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Downstairs Camera: Average Core Temperature",
+      "title": "Downstairs Camera: CPU Temp",
       "type": "gauge"
     },
     {
@@ -567,8 +763,8 @@
       "datasource": "Prometheus",
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 11,
+        "w": 2,
+        "x": 8,
         "y": 5
       },
       "id": 62,
@@ -620,7 +816,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.65:9243\"}",
@@ -634,7 +830,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Garage Camera: Average Core Temperature",
+      "title": "Garage Camera: CPU Temp",
       "type": "gauge"
     },
     {
@@ -642,7 +838,82 @@
       "datasource": "Prometheus",
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 2,
+        "x": 10,
+        "y": 5
+      },
+      "id": 68,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 100,
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#299c46",
+                  "value": null
+                },
+                {
+                  "color": "rgba(237, 129, 40, 0.89)",
+                  "value": 86
+                },
+                {
+                  "color": "#d44a3a",
+                  "value": 92
+                }
+              ]
+            },
+            "unit": "celsius"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "orientation": "horizontal",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.60:9243\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Average Core Temperature",
+          "refId": "A",
+          "step": 240
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Upstairs Camera: CPU Temp",
+      "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 4,
+        "w": 2,
         "x": 0,
         "y": 9
       },
@@ -686,6 +957,7 @@
                 }
               ]
             },
+            "title": "",
             "unit": "none"
           },
           "overrides": [],
@@ -695,7 +967,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "expr": "node_hwmon_fan_rpm{instance=~\"192.168.96.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
@@ -710,6 +982,62 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Server: CPU Fan",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 2,
+        "y": 9
+      },
+      "id": 92,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "expr": "nvidia_gpu_fanspeed_percent",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server: GPU Fan",
       "type": "gauge"
     },
     {
@@ -770,14 +1098,14 @@
       "hiddenSeries": false,
       "id": 11,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
-        "sideWidth": 250,
+        "sideWidth": 300,
         "sort": null,
         "sortDesc": null,
         "total": false,
@@ -797,22 +1125,27 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:657",
           "alias": "Busy Iowait",
           "color": "#890F02"
         },
         {
+          "$$hashKey": "object:658",
           "alias": "Idle",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:659",
           "alias": "Busy System",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:660",
           "alias": "Busy User",
           "color": "#0A437C"
         },
         {
+          "$$hashKey": "object:661",
           "alias": "Busy Other",
           "color": "#6D1F62"
         }
@@ -892,6 +1225,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:698",
           "format": "short",
           "label": "",
           "logBase": 1,
@@ -900,12 +1234,928 @@
           "show": true
         },
         {
+          "$$hashKey": "object:699",
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
           "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 7,
+        "y": 14
+      },
+      "hiddenSeries": false,
+      "id": 21,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:762",
+          "alias": "/.*Critical*./",
+          "color": "#E24D42",
+          "fill": 0
+        },
+        {
+          "$$hashKey": "object:763",
+          "alias": "/.*Max*./",
+          "color": "#EF843C",
+          "fill": 0
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Average Core Temperature",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "expr": "avg(node_hwmon_temp_crit_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Critical Core Temperature",
+          "refId": "C",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU: Temperature",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:786",
+          "format": "celsius",
+          "label": "Temperature",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:787",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 21
+      },
+      "hiddenSeries": false,
+      "id": 33,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:848",
+          "alias": "/.*Critical*./",
+          "color": "#E24D42",
+          "fill": 0
+        },
+        {
+          "$$hashKey": "object:849",
+          "alias": "/.*Max*./",
+          "color": "#EF843C",
+          "fill": 0
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.96.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "CPU Fan",
+          "refId": "A",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Fan",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:872",
+          "decimals": null,
+          "format": "none",
+          "label": "RPM",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:873",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 7,
+        "y": 21
+      },
+      "hiddenSeries": false,
+      "id": 80,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:933"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "nvidia_gpu_duty_cycle",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "GPU Utilization / Card",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:944",
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:945",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 4,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 28
+      },
+      "hiddenSeries": false,
+      "id": 84,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "nvidia_gpu_power_usage_milliwatts",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "GPU: Power Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "mwatt",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 7,
+        "y": 28
+      },
+      "hiddenSeries": false,
+      "id": 82,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "nvidia_gpu_memory_used_bytes",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "GPU: Memory",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1014",
+          "format": "decbits",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1015",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                90
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "5s",
+        "handler": 1,
+        "message": "The GPU temperature is too damn high!",
+        "name": "GPU Temperature alert",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "id": 1
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 35
+      },
+      "hiddenSeries": false,
+      "id": 86,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "nvidia_gpu_temperature_celsius",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "$$hashKey": "object:1542",
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 90,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "GPU Temp",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1323",
+          "decimals": null,
+          "format": "celsius",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1324",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 7,
+        "y": 35
+      },
+      "hiddenSeries": false,
+      "id": 88,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "nvidia_gpu_fanspeed_percent",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "gpu{{minor_number}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "GPU: Fan Speed",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:584",
+          "decimals": null,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:585",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "io time": "#890F02"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "decimals": 3,
+      "description": "",
+      "fill": 4,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 42
+      },
+      "hiddenSeries": false,
+      "id": 37,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": null,
+        "sortDesc": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 6,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:1079",
+          "alias": "/.*read*./",
+          "transform": "negative-Y"
+        },
+        {
+          "$$hashKey": "object:1080",
+          "alias": "/.*sda.*/",
+          "color": "#7EB26D"
+        },
+        {
+          "$$hashKey": "object:1081",
+          "alias": "/.*sdb.*/",
+          "color": "#EAB839"
+        },
+        {
+          "$$hashKey": "object:1082",
+          "alias": "/.*sdc.*/",
+          "color": "#6ED0E0"
+        },
+        {
+          "$$hashKey": "object:1083",
+          "alias": "/.*sdd.*/",
+          "color": "#EF843C"
+        },
+        {
+          "$$hashKey": "object:1084",
+          "alias": "/.*sde.*/",
+          "color": "#E24D42"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} - Bytes read",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} - Bytes written",
+          "refId": "B",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "I/O Usage Read / Write",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": false,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1127",
+          "format": "decbytes",
+          "label": "Bytes read (-) / write (+)",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1128",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
       ],
       "yaxis": {
@@ -951,17 +2201,17 @@
         "h": 7,
         "w": 7,
         "x": 7,
-        "y": 14
+        "y": 42
       },
       "hiddenSeries": false,
       "id": 13,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
         "hideEmpty": false,
         "hideZero": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
@@ -983,34 +2233,42 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1194",
           "alias": "/.*Transmitted.*/",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:1195",
           "alias": "/.*lo.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:1196",
           "alias": "/.*eth0.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:1197",
           "alias": "/.*eth1.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:1198",
           "alias": "/.*eth2.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:1199",
           "alias": "/.*eth3.*/",
           "color": "#E24D42"
         },
         {
+          "$$hashKey": "object:1200",
           "alias": "/.*eth4.*/",
           "color": "#1F78C1"
         },
         {
+          "$$hashKey": "object:1201",
           "alias": "/.*eth5.*/",
           "color": "#BA43A9"
         }
@@ -1056,6 +2314,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1256",
           "format": "Bps",
           "label": null,
           "logBase": 1,
@@ -1064,6 +2323,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1257",
           "format": "pps",
           "label": "",
           "logBase": 1,
@@ -1078,370 +2338,13 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fill": 2,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 0,
-        "y": 21
-      },
-      "hiddenSeries": false,
-      "id": 21,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*Critical*./",
-          "color": "#E24D42",
-          "fill": 0
-        },
-        {
-          "alias": "/.*Max*./",
-          "color": "#EF843C",
-          "fill": 0
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Average Core Temperature",
-          "refId": "A",
-          "step": 240
-        },
-        {
-          "expr": "avg(node_hwmon_temp_crit_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Critical Core Temperature",
-          "refId": "C",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Hardware temperature monitor",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "celsius",
-          "label": "Temperature",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fill": 2,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 7,
-        "y": 21
-      },
-      "hiddenSeries": false,
-      "id": 33,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": true,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*Critical*./",
-          "color": "#E24D42",
-          "fill": 0
-        },
-        {
-          "alias": "/.*Max*./",
-          "color": "#EF843C",
-          "fill": 0
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.96.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "CPU Fan",
-          "refId": "A",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "CPU Fan",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "decimals": null,
-          "format": "none",
-          "label": "RPM",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {
-        "io time": "#890F02"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": 3,
-      "description": "",
-      "fill": 4,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 0,
-        "y": 28
-      },
-      "hiddenSeries": false,
-      "id": 37,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "sort": null,
-        "sortDesc": null,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "maxPerRow": 6,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*read*./",
-          "transform": "negative-Y"
-        },
-        {
-          "alias": "/.*sda.*/",
-          "color": "#7EB26D"
-        },
-        {
-          "alias": "/.*sdb.*/",
-          "color": "#EAB839"
-        },
-        {
-          "alias": "/.*sdc.*/",
-          "color": "#6ED0E0"
-        },
-        {
-          "alias": "/.*sdd.*/",
-          "color": "#EF843C"
-        },
-        {
-          "alias": "/.*sde.*/",
-          "color": "#E24D42"
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
-          "format": "time_series",
-          "hide": false,
-          "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully read bytes",
-          "refId": "A",
-          "step": 240
-        },
-        {
-          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
-          "format": "time_series",
-          "hide": false,
-          "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully written bytes",
-          "refId": "B",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "I/O Usage Read / Write",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": false,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
-          "label": "Bytes read (-) / write (+)",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "ms",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
       "collapsed": false,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 49
       },
       "id": 52,
       "panels": [],
@@ -1474,26 +2377,26 @@
       "fill": 4,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 7,
         "x": 0,
-        "y": 36
+        "y": 50
       },
       "hiddenSeries": false,
       "id": 50,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "max": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
-        "sideWidth": 250,
+        "sideWidth": 300,
         "sort": null,
         "sortDesc": null,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1509,22 +2412,27 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1782",
           "alias": "Busy Iowait",
           "color": "#890F02"
         },
         {
+          "$$hashKey": "object:1783",
           "alias": "Idle",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:1784",
           "alias": "Busy System",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:1785",
           "alias": "Busy User",
           "color": "#0A437C"
         },
         {
+          "$$hashKey": "object:1786",
           "alias": "Busy Other",
           "color": "#6D1F62"
         }
@@ -1604,6 +2512,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1823",
           "format": "short",
           "label": "",
           "logBase": 1,
@@ -1612,6 +2521,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1824",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1659,27 +2569,27 @@
       "fill": 4,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 7,
         "x": 7,
-        "y": 36
+        "y": 50
       },
       "hiddenSeries": false,
       "id": 54,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
         "hideEmpty": false,
         "hideZero": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1694,34 +2604,42 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:397",
           "alias": "/.*trans.*/",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:398",
           "alias": "/.*lo.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:399",
           "alias": "/.*eth0.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:400",
           "alias": "/.*eth1.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:401",
           "alias": "/.*eth2.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:402",
           "alias": "/.*eth3.*/",
           "color": "#E24D42"
         },
         {
+          "$$hashKey": "object:403",
           "alias": "/.*eth4.*/",
           "color": "#1F78C1"
         },
         {
+          "$$hashKey": "object:404",
           "alias": "/.*eth5.*/",
           "color": "#BA43A9"
         }
@@ -1767,6 +2685,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:459",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -1775,6 +2694,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:460",
           "format": "pps",
           "label": "",
           "logBase": 1,
@@ -1804,17 +2724,17 @@
         "h": 7,
         "w": 7,
         "x": 0,
-        "y": 43
+        "y": 58
       },
       "hiddenSeries": false,
       "id": 56,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "sort": null,
         "sortDesc": null,
@@ -1835,26 +2755,32 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:521",
           "alias": "/.*read*./",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:522",
           "alias": "/.*sda.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:523",
           "alias": "/.*sdb.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:524",
           "alias": "/.*sdc.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:525",
           "alias": "/.*sdd.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:526",
           "alias": "/.*sde.*/",
           "color": "#E24D42"
         }
@@ -1867,8 +2793,9 @@
           "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.65:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully read bytes",
+          "legendFormat": "{{device}} - Bytes read",
           "refId": "A",
           "step": 240
         },
@@ -1876,8 +2803,9 @@
           "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.65:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully written bytes",
+          "legendFormat": "{{device}} - Bytes written",
           "refId": "B",
           "step": 240
         }
@@ -1902,6 +2830,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:569",
           "format": "decbytes",
           "label": "Bytes read (-) / write (+)",
           "logBase": 1,
@@ -1910,6 +2839,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:570",
           "format": "ms",
           "label": "",
           "logBase": 1,
@@ -1935,15 +2865,15 @@
         "h": 7,
         "w": 7,
         "x": 7,
-        "y": 43
+        "y": 58
       },
       "hiddenSeries": false,
       "id": 58,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
@@ -1962,11 +2892,13 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:636",
           "alias": "/.*Critical*./",
           "color": "#E24D42",
           "fill": 0
         },
         {
+          "$$hashKey": "object:637",
           "alias": "/.*Max*./",
           "color": "#EF843C",
           "fill": 0
@@ -2006,6 +2938,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:660",
           "format": "celsius",
           "label": "Temperature",
           "logBase": 1,
@@ -2014,6 +2947,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:661",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2034,7 +2968,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 65
       },
       "id": 25,
       "panels": [],
@@ -2070,23 +3004,23 @@
         "h": 7,
         "w": 7,
         "x": 0,
-        "y": 51
+        "y": 66
       },
       "hiddenSeries": false,
       "id": 27,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "max": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
-        "sideWidth": 250,
+        "sideWidth": 300,
         "sort": null,
         "sortDesc": null,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2102,22 +3036,27 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:738",
           "alias": "Busy Iowait",
           "color": "#890F02"
         },
         {
+          "$$hashKey": "object:739",
           "alias": "Idle",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:740",
           "alias": "Busy System",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:741",
           "alias": "Busy User",
           "color": "#0A437C"
         },
         {
+          "$$hashKey": "object:742",
           "alias": "Busy Other",
           "color": "#6D1F62"
         }
@@ -2197,6 +3136,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:779",
           "format": "short",
           "label": "",
           "logBase": 1,
@@ -2205,6 +3145,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:780",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2255,24 +3196,24 @@
         "h": 7,
         "w": 7,
         "x": 7,
-        "y": 51
+        "y": 66
       },
       "hiddenSeries": false,
       "id": 29,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
         "hideEmpty": false,
         "hideZero": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2287,34 +3228,42 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:845",
           "alias": "/.*trans.*/",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:846",
           "alias": "/.*lo.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:847",
           "alias": "/.*eth0.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:848",
           "alias": "/.*eth1.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:849",
           "alias": "/.*eth2.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:850",
           "alias": "/.*eth3.*/",
           "color": "#E24D42"
         },
         {
+          "$$hashKey": "object:851",
           "alias": "/.*eth4.*/",
           "color": "#1F78C1"
         },
         {
+          "$$hashKey": "object:852",
           "alias": "/.*eth5.*/",
           "color": "#BA43A9"
         }
@@ -2360,6 +3309,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:907",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -2368,6 +3318,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:908",
           "format": "pps",
           "label": "",
           "logBase": 1,
@@ -2397,17 +3348,17 @@
         "h": 7,
         "w": 7,
         "x": 0,
-        "y": 58
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 39,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "sort": null,
         "sortDesc": null,
@@ -2428,26 +3379,32 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1087",
           "alias": "/.*read*./",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:1088",
           "alias": "/.*sda.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:1089",
           "alias": "/.*sdb.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:1090",
           "alias": "/.*sdc.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:1091",
           "alias": "/.*sdd.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:1092",
           "alias": "/.*sde.*/",
           "color": "#E24D42"
         }
@@ -2460,8 +3417,9 @@
           "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.70:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully read bytes",
+          "legendFormat": "{{device}} - Bytes read",
           "refId": "A",
           "step": 240
         },
@@ -2469,8 +3427,9 @@
           "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.70:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully written bytes",
+          "legendFormat": "{{device}} - Bytes written",
           "refId": "B",
           "step": 240
         }
@@ -2495,6 +3454,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1135",
           "format": "decbytes",
           "label": "Bytes read (-) / write (+)",
           "logBase": 1,
@@ -2503,6 +3463,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1136",
           "format": "ms",
           "label": "",
           "logBase": 1,
@@ -2528,15 +3489,15 @@
         "h": 7,
         "w": 7,
         "x": 7,
-        "y": 58
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 49,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
@@ -2555,11 +3516,13 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1202",
           "alias": "/.*Critical*./",
           "color": "#E24D42",
           "fill": 0
         },
         {
+          "$$hashKey": "object:1203",
           "alias": "/.*Max*./",
           "color": "#EF843C",
           "fill": 0
@@ -2599,6 +3562,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1226",
           "format": "celsius",
           "label": "Temperature",
           "logBase": 1,
@@ -2607,6 +3571,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1227",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2627,7 +3592,639 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 65
+        "y": 80
+      },
+      "id": 72,
+      "panels": [],
+      "title": "Upstairs Camera",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "Busy": "#EAB839",
+        "Busy Iowait": "#890F02",
+        "Busy other": "#1F78C1",
+        "Idle": "#052B51",
+        "Idle - Waiting for something to happen": "#052B51",
+        "guest": "#9AC48A",
+        "idle": "#052B51",
+        "iowait": "#EAB839",
+        "irq": "#BF1B00",
+        "nice": "#C15C17",
+        "softirq": "#E24D42",
+        "steal": "#FCE2DE",
+        "system": "#508642",
+        "user": "#5195CE"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "decimals": 2,
+      "description": "Basic CPU info",
+      "fill": 4,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 81
+      },
+      "hiddenSeries": false,
+      "id": 70,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 300,
+        "sort": null,
+        "sortDesc": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 6,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": true,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:225",
+          "alias": "Busy Iowait",
+          "color": "#890F02"
+        },
+        {
+          "$$hashKey": "object:226",
+          "alias": "Idle",
+          "color": "#7EB26D"
+        },
+        {
+          "$$hashKey": "object:227",
+          "alias": "Busy System",
+          "color": "#EAB839"
+        },
+        {
+          "$$hashKey": "object:228",
+          "alias": "Busy User",
+          "color": "#0A437C"
+        },
+        {
+          "$$hashKey": "object:229",
+          "alias": "Busy Other",
+          "color": "#6D1F62"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Busy System",
+          "refId": "B",
+          "step": 240
+        },
+        {
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Busy User",
+          "refId": "D",
+          "step": 240
+        },
+        {
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Busy Iowait",
+          "refId": "E",
+          "step": 240
+        },
+        {
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Busy IRQs",
+          "refId": "F",
+          "step": 240
+        },
+        {
+          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Busy Other",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Idle",
+          "refId": "C",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Basic",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:266",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:267",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "Recv_bytes_eth2": "#7EB26D",
+        "Recv_bytes_lo": "#0A50A1",
+        "Recv_drop_eth2": "#6ED0E0",
+        "Recv_drop_lo": "#E0F9D7",
+        "Recv_errs_eth2": "#BF1B00",
+        "Recv_errs_lo": "#CCA300",
+        "Trans_bytes_eth2": "#7EB26D",
+        "Trans_bytes_lo": "#0A50A1",
+        "Trans_drop_eth2": "#6ED0E0",
+        "Trans_drop_lo": "#E0F9D7",
+        "Trans_errs_eth2": "#BF1B00",
+        "Trans_errs_lo": "#CCA300",
+        "recv_bytes_lo": "#0A50A1",
+        "recv_drop_eth0": "#99440A",
+        "recv_drop_lo": "#967302",
+        "recv_errs_eth0": "#BF1B00",
+        "recv_errs_lo": "#890F02",
+        "trans_bytes_eth0": "#7EB26D",
+        "trans_bytes_lo": "#0A50A1",
+        "trans_drop_eth0": "#99440A",
+        "trans_drop_lo": "#967302",
+        "trans_errs_eth0": "#BF1B00",
+        "trans_errs_lo": "#890F02"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "Basic network info per interface",
+      "fill": 4,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 81
+      },
+      "hiddenSeries": false,
+      "id": 74,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:2046",
+          "alias": "/.*trans.*/",
+          "transform": "negative-Y"
+        },
+        {
+          "$$hashKey": "object:2047",
+          "alias": "/.*lo.*/",
+          "color": "#7EB26D"
+        },
+        {
+          "$$hashKey": "object:2048",
+          "alias": "/.*eth0.*/",
+          "color": "#EAB839"
+        },
+        {
+          "$$hashKey": "object:2049",
+          "alias": "/.*eth1.*/",
+          "color": "#6ED0E0"
+        },
+        {
+          "$$hashKey": "object:2050",
+          "alias": "/.*eth2.*/",
+          "color": "#EF843C"
+        },
+        {
+          "$$hashKey": "object:2051",
+          "alias": "/.*eth3.*/",
+          "color": "#E24D42"
+        },
+        {
+          "$$hashKey": "object:2052",
+          "alias": "/.*eth4.*/",
+          "color": "#1F78C1"
+        },
+        {
+          "$$hashKey": "object:2053",
+          "alias": "/.*eth5.*/",
+          "color": "#BA43A9"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "recv {{device}}",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "trans {{device}} ",
+          "refId": "B",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Network Traffic Basic",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:2108",
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:2109",
+          "format": "pps",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "io time": "#890F02"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "decimals": 3,
+      "description": "",
+      "fill": 4,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 89
+      },
+      "hiddenSeries": false,
+      "id": 76,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": null,
+        "sortDesc": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 6,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:1598",
+          "alias": "/.*read*./",
+          "transform": "negative-Y"
+        },
+        {
+          "$$hashKey": "object:1599",
+          "alias": "/.*sda.*/",
+          "color": "#7EB26D"
+        },
+        {
+          "$$hashKey": "object:1600",
+          "alias": "/.*sdb.*/",
+          "color": "#EAB839"
+        },
+        {
+          "$$hashKey": "object:1601",
+          "alias": "/.*sdc.*/",
+          "color": "#6ED0E0"
+        },
+        {
+          "$$hashKey": "object:1602",
+          "alias": "/.*sdd.*/",
+          "color": "#EF843C"
+        },
+        {
+          "$$hashKey": "object:1603",
+          "alias": "/.*sde.*/",
+          "color": "#E24D42"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.60:9100\"}[5m])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} -Bytes read",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.60:9100\"}[5m])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} - Bytes written",
+          "refId": "B",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "I/O Usage Read / Write",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": false,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1646",
+          "format": "decbytes",
+          "label": "Bytes read (-) / write (+)",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1647",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 89
+      },
+      "hiddenSeries": false,
+      "id": 78,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:1713",
+          "alias": "/.*Critical*./",
+          "color": "#E24D42",
+          "fill": 0
+        },
+        {
+          "$$hashKey": "object:1714",
+          "alias": "/.*Max*./",
+          "color": "#EF843C",
+          "fill": 0
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.60:9243\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Average Core Temperature",
+          "refId": "A",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Hardware temperature monitor",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1737",
+          "format": "celsius",
+          "label": "Temperature",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1738",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 97
       },
       "id": 15,
       "panels": [],
@@ -2660,26 +4257,26 @@
       "fill": 4,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 7,
         "x": 0,
-        "y": 66
+        "y": 98
       },
       "hiddenSeries": false,
       "id": 17,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "max": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
-        "sideWidth": 250,
+        "sideWidth": 300,
         "sort": null,
         "sortDesc": null,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2695,22 +4292,27 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1815",
           "alias": "Busy Iowait",
           "color": "#890F02"
         },
         {
+          "$$hashKey": "object:1816",
           "alias": "Idle",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:1817",
           "alias": "Busy System",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:1818",
           "alias": "Busy User",
           "color": "#0A437C"
         },
         {
+          "$$hashKey": "object:1819",
           "alias": "Busy Other",
           "color": "#6D1F62"
         }
@@ -2790,6 +4392,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1856",
           "format": "short",
           "label": "",
           "logBase": 1,
@@ -2798,6 +4401,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1857",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2845,27 +4449,27 @@
       "fill": 4,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 7,
         "x": 7,
-        "y": 66
+        "y": 98
       },
       "hiddenSeries": false,
       "id": 19,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
         "hideEmpty": false,
         "hideZero": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2880,34 +4484,42 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:1920",
           "alias": "/.*trans.*/",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:1921",
           "alias": "/.*lo.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:1922",
           "alias": "/.*eth0.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:1923",
           "alias": "/.*eth1.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:1924",
           "alias": "/.*eth2.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:1925",
           "alias": "/.*eth3.*/",
           "color": "#E24D42"
         },
         {
+          "$$hashKey": "object:1926",
           "alias": "/.*eth4.*/",
           "color": "#1F78C1"
         },
         {
+          "$$hashKey": "object:1927",
           "alias": "/.*eth5.*/",
           "color": "#BA43A9"
         }
@@ -2953,6 +4565,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1982",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -2961,6 +4574,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1983",
           "format": "pps",
           "label": "",
           "logBase": 1,
@@ -2987,20 +4601,20 @@
       "fill": 4,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 9,
         "w": 7,
         "x": 0,
-        "y": 72
+        "y": 106
       },
       "hiddenSeries": false,
       "id": 41,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "sort": null,
         "sortDesc": null,
@@ -3021,26 +4635,32 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:2170",
           "alias": "/.*read*./",
           "transform": "negative-Y"
         },
         {
+          "$$hashKey": "object:2171",
           "alias": "/.*sda.*/",
           "color": "#7EB26D"
         },
         {
+          "$$hashKey": "object:2172",
           "alias": "/.*sdb.*/",
           "color": "#EAB839"
         },
         {
+          "$$hashKey": "object:2173",
           "alias": "/.*sdc.*/",
           "color": "#6ED0E0"
         },
         {
+          "$$hashKey": "object:2174",
           "alias": "/.*sdd.*/",
           "color": "#EF843C"
         },
         {
+          "$$hashKey": "object:2175",
           "alias": "/.*sde.*/",
           "color": "#E24D42"
         }
@@ -3053,8 +4673,9 @@
           "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.55:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully read bytes",
+          "legendFormat": "{{device}} - Bytes read",
           "refId": "A",
           "step": 240
         },
@@ -3062,8 +4683,9 @@
           "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.55:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{device}} - Successfully written bytes",
+          "legendFormat": "{{device}} - Bytes written",
           "refId": "B",
           "step": 240
         }
@@ -3088,6 +4710,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2218",
           "format": "decbytes",
           "label": "Bytes read (-) / write (+)",
           "logBase": 1,
@@ -3096,6 +4719,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:2219",
           "format": "ms",
           "label": "",
           "logBase": 1,
@@ -3118,19 +4742,20 @@
       "fill": 2,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 9,
         "w": 7,
         "x": 7,
-        "y": 72
+        "y": 106
       },
       "hiddenSeries": false,
       "id": 43,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": true,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -3148,11 +4773,13 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:2285",
           "alias": "/.*Critical*./",
           "color": "#E24D42",
           "fill": 0
         },
         {
+          "$$hashKey": "object:2286",
           "alias": "/.*Max*./",
           "color": "#EF843C",
           "fill": 0
@@ -3192,6 +4819,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2309",
           "format": "celsius",
           "label": "Temperature",
           "logBase": 1,
@@ -3200,6 +4828,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:2310",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -3256,5 +4885,5 @@
   "variables": {
     "list": []
   },
-  "version": 1
+  "version": 12
 }
