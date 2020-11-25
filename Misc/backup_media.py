@@ -386,7 +386,7 @@ def check_for_table_duplicates(connection,table_name):
     """
     c = connection.cursor()
     try:
-        sql_string = 'select filename,count(filename) from {table_name} group by filename having count(filename) > 1'.format(table_name=table_name)
+        sql_string = 'select name,count(name) from {table_name} group by name having count(name) > 1'.format(table_name=table_name)
         c.execute(sql_string)
         all_rows = c.fetchall()
     except sqlite3.Error as err:
@@ -656,20 +656,26 @@ def execute_file_operations():
                 if operation["action"] == "copy" :
                     if verbose > 1:
                         print("Trying to copy file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
-                    try:
-                        shutil.copy(operation["source"],operation["destination"])
-                        if verbose > 0:
-                            print("Copied file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
-                    except IOError as io_err:
-                        os.makedirs(os.path.dirname(operation["destination"]))
+                    sourcefile = Path(operation["source"])
+                    if sourcefile.exists():
                         try:
                             shutil.copy(operation["source"],operation["destination"])
                             if verbose > 0:
                                 print("Copied file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
                         except IOError as io_err:
-                            if verbose > 1:
-                                print("{0}".format(io_err))
-                            print("Could not copy source {source} to destination {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                            os.makedirs(os.path.dirname(operation["destination"]))
+                            try:
+                                shutil.copy(operation["source"],operation["destination"])
+                                if verbose > 0:
+                                    print("Copied file {source} to {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                            except IOError as io_err:
+                                if verbose > 1:
+                                    print("{0}".format(io_err))
+                                print("Could not copy source {source} to destination {destination} on media {media}".format(source=operation["source"],destination=operation["destination"],media=media_name))
+                    else:
+                        if verbose > 1:
+                            print ("Source {source} does not exist, ignoring".format(source=operation["source"]))
+
 
 def main(args):
     """
@@ -716,7 +722,7 @@ def main(args):
 
     # default for projects on server
     if len(server_projects) <= 0:
-        server_projects = ['.Spotlight-V200','Audiobooks','Backups','Downloads','HD Movies','Home Movies','Literatur','Movies','Music','Photos','TV Shows']
+        server_projects = ['.Spotlight-V200','Audiobooks','Backups','Downloads','HD Movies','4K Movies','Home Movies','Literatur','Movies','TeslaCamClips','Music','Photos','TV Shows']
 
     # directory on backup media has _Ext ending to avoid duplicated ZFS mounts
     # creating backup_projects
