@@ -52,25 +52,25 @@ def calculate_comed_cost(utc_start,utc_end,input_kwh):
 
     # input parameter for cost calculation
     Average_Consumption_Per_Month = 600 #[kWh]
-    Capcity_Obligation = 1.41 #[kWh]
-    Electricity_Supply_Charge =  10.04 #[$$]
-    Transmission_Service_Charge =  0.00786 #[$$/kWh]
-    Capacity_Charge =  5.90209 #[$$/kWh]
-    Purchased_Electricity_Adjustment =  -0.93333 #[$$]
+    Capcity_Obligation = 0.92 #[kWh]
+    Electricity_Supply_Charge =  12.485 #[$$]
+    Transmission_Service_Charge = 0.00813 #[$$/kWh]
+    Capacity_Charge = 5.85520 #[$$/kWh]
+    Purchased_Electricity_Adjustment =  -0.38600 #[$$]
     Misc_Procurement_Component_Chg =  0.00091 #[$$/kWh]
-    Customer_charge =  11.30000 #[$$]
-    Standard_Metering_Charge = 4.52000 #[$$]
-    Distribution_Facilities_Charge =  0.03541 #[$$/kWh]
-    IL_Electricity_Distribiution_Charge =  0.00120 #[$$/kWh]
+    Customer_charge = 11.37600 #[$$]
+    Standard_Metering_Charge = 4.55600 #[$$]
+    Distribution_Facilities_Charge = 0.03567 #[$$/kWh]
+    IL_Electricity_Distribiution_Charge =  0.00121 #[$$/kWh]
     Environmental_Cost_Recovery_Adj =  0.00039 #[$$/kWh]
     Renewable_Portfolio_Standard =  0.00189 #[$$/kWh]
-    Zero_Emission_Standard =  0.00190 #[$$/kWh]
+    Zero_Emission_Standard =  0.00193 #[$$/kWh]
     Energy_Efficiency_Programs =  0.00132 #[$$/kWh]
     Energy_Efficiency_Adjustment = 0 #[$$/kWh]
     Peak_Time_Savings = 0 #[$$]
-    Franchise_Cost =  0.99333 #[$$]
-    State_Tax =  1.87333 #[$$]
-    Municipal_Tax = 3.55667 #[$$]
+    Franchise_Cost =  0.9170 #[$$]
+    State_Tax =  2.02500 #[$$]
+    Municipal_Tax = 3.85000 #[$$]
 
     # calculate cost for consumed
     cost = average_kwh_price * kwh
@@ -132,23 +132,27 @@ def main(args):
 
     for row in rows[:num_query_entries]:
         id = row[0]
-        starttime = utc_timezone.localize(row[1])
-        endtime = utc_timezone.localize(row[2])
-        kwh = row[16]
-        if kwh == None:
-            kwh = 0.0
-        cost = row[17]
-        if cost == None:
-            cost = 0.0
-        comed_cost = calculate_comed_cost(starttime,endtime,kwh)
-        print("kWh: {0:.2f} cost: {1:.2f} comed: {2:.2f}".format(kwh,cost,comed_cost))
+        address_id = row[12]
+        if address_id == 1:
+            starttime = utc_timezone.localize(row[1])
+            endtime = utc_timezone.localize(row[2])
+            kwh = row[16]
+            if kwh == None:
+                kwh = 0.0
+            cost = row[17]
+            if cost == None:
+                cost = 0.0
+            comed_cost = calculate_comed_cost(starttime,endtime,kwh)
+            print("kWh: {0:.2f} cost: {1:.2f} comed: {2:.2f}".format(kwh,cost,comed_cost))
 
-        # update database
-        sql = "UPDATE charging_processes SET cost = {0} WHERE id = {1}".format(str(comed_cost),str(id))
-        try:
-            cursor.execute(sql)
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+            # update database
+            sql = "UPDATE charging_processes SET cost = {0} WHERE id = {1}".format(str(comed_cost),str(id))
+            try:
+                cursor.execute(sql)
+            except (Exception, psycopg2.DatabaseError) as error:
+                print(error)
+        else:
+            print("Not charging at home, not updating entry, charging at address id: {0}".format(address_id))
 
     try:
         connection.commit()
