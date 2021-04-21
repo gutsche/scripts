@@ -104,7 +104,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.40:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.40:9100\",job=~\"node\"}) by (cpu))",
+          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.196.40:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.196.40:9100\",job=~\"node\"}) by (cpu))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -307,7 +307,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}) by (cpu))",
+          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.196.92:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.196.92:9100\",job=~\"node\"}) by (cpu))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -381,7 +381,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}) by (cpu))",
+          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.196.94:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.196.94:9100\",job=~\"node\"}) by (cpu))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -456,7 +456,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}) by (cpu))",
+          "expr": "(((count(count(node_cpu_seconds_total{instance=~\"192.168.196.93:9100\",job=~\"node\"}) by (cpu))) - avg(sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])))) * 100) / count(count(node_cpu_seconds_total{instance=~\"192.168.196.93:9100\",job=~\"node\"}) by (cpu))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -530,7 +530,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
+          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.196.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -736,7 +736,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.70:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.92:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -811,7 +811,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.65:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.94:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -886,7 +886,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.60:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.93:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -945,13 +945,13 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "sum(rate(node_disk_read_bytes_total{instance=~\"192.168.96.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m]))",
+          "expr": "sum(rate(node_disk_read_bytes_total{instance=~\"192.168.196.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m]))",
           "interval": "",
           "legendFormat": "Read Throughput",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(node_disk_written_bytes_total{instance=~\"192.168.96.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m]))",
+          "expr": "sum(rate(node_disk_written_bytes_total{instance=~\"192.168.196.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m]))",
           "interval": "",
           "legendFormat": "Write Throughput",
           "refId": "B"
@@ -1009,7 +1009,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.196.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Received",
@@ -1017,7 +1017,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.196.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Transmitted",
@@ -1092,7 +1092,7 @@
       "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.96.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
+          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.196.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1277,7 +1277,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1286,7 +1286,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1295,7 +1295,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Iowait",
@@ -1303,7 +1303,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy IRQs",
@@ -1311,7 +1311,7 @@
           "step": 240
         },
         {
-          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Other",
@@ -1319,7 +1319,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.40:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.40:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Idle",
@@ -1485,7 +1485,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.196.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Received",
@@ -1493,7 +1493,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.196.40:9100\",job=~\"node\",device=~\"eno1\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Transmitted",
@@ -1589,7 +1589,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(node_disk_read_bytes_total{instance=~\"192.168.96.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m])) by (device  ) ",
+          "expr": "sum(rate(node_disk_read_bytes_total{instance=~\"192.168.196.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m])) by (device  ) ",
           "interval": "",
           "legendFormat": "{{device}}",
           "refId": "A"
@@ -1683,7 +1683,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(node_disk_written_bytes_total{instance=~\"192.168.96.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m])) by (device  ) ",
+          "expr": "sum(rate(node_disk_written_bytes_total{instance=~\"192.168.196.40:9100\", device=~\"[a-z0-9]*[a-z0-9]\"}[1m])) by (device  ) ",
           "interval": "",
           "legendFormat": "{{device}}",
           "refId": "A"
@@ -1814,7 +1814,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.196.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1824,7 +1824,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.196.40:9100\",device=~\"[a-z]*[a-z]\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1935,7 +1935,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
+          "expr": "avg(node_hwmon_temp_celsius{instance=~\"192.168.196.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1944,7 +1944,7 @@
           "step": 240
         },
         {
-          "expr": "avg(node_hwmon_temp_crit_celsius{instance=~\"192.168.96.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
+          "expr": "avg(node_hwmon_temp_crit_celsius{instance=~\"192.168.196.40:9100\",job=~\"node\",chip=~\"platform_coretemp_0\",sensor=~\"temp2|temp3|temp4|temp5\"})",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -2058,7 +2058,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.96.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
+          "expr": "node_hwmon_fan_rpm{instance=~\"192.168.196.40:9100\",job=~\"node\",sensor=~\"fan1\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2758,7 +2758,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -2767,7 +2767,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -2776,7 +2776,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Iowait",
@@ -2784,7 +2784,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy IRQs",
@@ -2792,7 +2792,7 @@
           "step": 240
         },
         {
-          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Other",
@@ -2800,7 +2800,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Idle",
@@ -2965,7 +2965,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "recv {{device}}",
@@ -2973,7 +2973,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.65:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.196.94:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "trans {{device}} ",
@@ -3106,7 +3106,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.65:9100\"}[5m])",
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.196.94:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -3116,7 +3116,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.65:9100\"}[5m])",
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.196.94:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -3227,7 +3227,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.65:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.94:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3384,7 +3384,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -3393,7 +3393,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -3402,7 +3402,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Iowait",
@@ -3410,7 +3410,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy IRQs",
@@ -3418,7 +3418,7 @@
           "step": 240
         },
         {
-          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Busy Other",
@@ -3426,7 +3426,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Idle",
@@ -3591,7 +3591,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "recv {{device}}",
@@ -3599,7 +3599,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.70:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.196.92:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "trans {{device}} ",
@@ -3732,7 +3732,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.70:9100\"}[5m])",
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.196.92:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -3742,7 +3742,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.70:9100\"}[5m])",
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.196.92:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -3853,7 +3853,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.70:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.92:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4010,7 +4010,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=\"system\",instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -4020,7 +4020,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='user',instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -4030,7 +4030,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode='iowait',instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4039,7 +4039,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (instance)(irate(node_cpu_seconds_total{mode=~\".*irq\",instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4048,7 +4048,7 @@
           "step": 240
         },
         {
-          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum (irate(node_cpu_seconds_total{mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq',instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4057,7 +4057,7 @@
           "step": 240
         },
         {
-          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])) * 100",
+          "expr": "sum by (mode)(irate(node_cpu_seconds_total{mode='idle',instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4223,7 +4223,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_receive_bytes_total{instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4232,7 +4232,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.96.60:9100\",job=~\"node\"}[5m])",
+          "expr": "irate(node_network_transmit_bytes_total{instance=~\"192.168.196.93:9100\",job=~\"node\"}[5m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4366,7 +4366,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.96.60:9100\"}[5m])",
+          "expr": "irate(node_disk_read_bytes_total{instance=~\"192.168.196.93:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -4376,7 +4376,7 @@
           "step": 240
         },
         {
-          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.96.60:9100\"}[5m])",
+          "expr": "irate(node_disk_written_bytes_total{instance=~\"192.168.196.93:9100\"}[5m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -4487,7 +4487,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.96.60:9243\"}",
+          "expr": "rpi_cpu_temperature_celsius{instance=~\"192.168.196.93:9243\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,

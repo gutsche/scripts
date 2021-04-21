@@ -1,0 +1,26 @@
+- hosts: proxmox
+  gather_facts: false
+  ignore_unreachable: yes
+  become: true
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Shutdown server
+      shell: sleep 2 && /sbin/shutdown -c && /sbin/shutdown -h now
+      async: 1
+      poll: 0
+      ignore_errors: yes
+
+- hosts: truenas
+  gather_facts: false
+  ignore_unreachable: yes
+  become: true
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Shutdown server
+      shell: sleep 2 && /sbin/shutdown -p now
+      async: 1
+      poll: 0
+      ignore_errors: yes
+

@@ -1,0 +1,51 @@
+[proxmox]
+Homelab-Server-01  ansible_host=192.168.196.41
+#Homelab-Server-02  ansible_host=192.168.196.42
+#Homelab-Server-03  ansible_host=192.168.196.43
+
+[vms]
+Homelab-NextCloud ansible_host=192.168.196.31
+Homelab-Monitoring ansible_host=192.168.196.50
+Homelab-Gitlab ansible_host=192.168.196.51
+Homelab-Pihole ansible_host=192.168.196.60
+Homelab-Unifi ansible_host=192.168.196.70
+Homelab-Plex ansible_host=192.168.196.80
+Homelab-Teslamate ansible_host=192.168.196.90
+Homelab-Homebridge ansible_host=192.168.196.91
+
+[piholes]
+Homelab-Pihole ansible_host=192.168.196.60
+
+[homebridges]
+Homelab-Homebridge ansible_host=192.168.196.91
+
+[cameras]
+Homelab-Camera-Downstairs 	ansible_host=192.168.196.92
+Homelab-Camera-Upstairs	 	ansible_host=192.168.196.93
+Homelab-Camera-Garage	 	ansible_host=192.168.196.94
+
+[truenas]
+Homelab-Storage    ansible_host=192.168.196.30
+
+[proxmox:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[vms:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[piholes:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[homebridges:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[cameras:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[truenas:vars]
+ansible_python_interpreter=/usr/local/bin/python
+
+[all:vars]
+ansible_user='gutsche'
+ansible_become=yes
+ansible_become_method=sudo
