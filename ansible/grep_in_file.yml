@@ -1,0 +1,13 @@
+- name: grep in file for string
+  hosts: vms,cameras
+
+  tasks:
+    - name: "Grep for string in file"
+      become: yes
+      become_user: root
+      register: presence
+      shell: "grep -i 'oguatworld@mail.com' /etc/aliases"
+
+    - name: "sample task in case the string is present in the file"
+      debug: msg="Wrong alias entry for oguatworld's gmail address"
+      when: presence is changed

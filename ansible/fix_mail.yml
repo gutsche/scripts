@@ -1,0 +1,45 @@
+- hosts: vms,cameras
+  become: true
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: copy sasl_passwd and backup original file
+      ansible.builtin.copy:
+        src: sasl_passwd
+        dest: /etc/postfix/sasl_passwd
+        owner: root
+        group: root
+        mode: '0600'
+        backup: yes
+    - name: copy main.cf and backup original file
+      ansible.builtin.copy:
+        src: main.cf
+        dest: /etc/postfix/main.cf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+    - name: copy header_checks and backup original file
+      ansible.builtin.copy:
+        src: header_checks
+        dest: /etc/postfix/header_checks
+        owner: root
+        group: root
+        mode: '0600'
+        backup: yes
+    - name: replace HOSTNAME in header_checks
+      ansible.builtin.replace:
+        path: /etc/postfix/header_checks
+        regexp: HOSTNAME
+        replace: '{{ ansible_hostname }}'
+        backup: no
+    - name: re-hash
+      command: postmap hash:/etc/postfix/sasl_passwd
+    - name: re-chmod
+      ansible.builtin.file:
+        path: /etc/postfix/sasl_passwd
+        owner: root
+        group: root
+        mode: '0600'
+    - name: reload
+      command: postfix reload

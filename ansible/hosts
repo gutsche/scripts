@@ -4,7 +4,7 @@ Homelab-Server-01  ansible_host=192.168.196.41
 #Homelab-Server-03  ansible_host=192.168.196.43
 
 [vms]
-Homelab-NextCloud ansible_host=192.168.196.31
+#Homelab-NextCloud ansible_host=192.168.196.31
 Homelab-Monitoring ansible_host=192.168.196.50
 Homelab-Gitlab ansible_host=192.168.196.51
 Homelab-Pihole ansible_host=192.168.196.60
@@ -27,6 +27,9 @@ Homelab-Camera-Garage	 	ansible_host=192.168.196.94
 [truenas]
 Homelab-Storage    ansible_host=192.168.196.30
 
+[test]
+Homelab-Homebridge ansible_host=192.168.196.91
+
 [proxmox:vars]
 ansible_python_interpreter=/usr/bin/python3
 
@@ -44,6 +47,9 @@ ansible_python_interpreter=/usr/bin/python3
 
 [truenas:vars]
 ansible_python_interpreter=/usr/local/bin/python
+
+[test:vars]
+ansible_python_interpreter=/usr/bin/python3
 
 [all:vars]
 ansible_user='gutsche'

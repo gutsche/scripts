@@ -1,0 +1,1 @@
+/^Subject: (.*?)$/i REPLACE Subject: [HOSTNAME] $1
