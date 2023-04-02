@@ -1,28 +1,29 @@
 [proxmox]
-Homelab-Server-01  ansible_host=192.168.196.41
-#Homelab-Server-02  ansible_host=192.168.196.42
-#Homelab-Server-03  ansible_host=192.168.196.43
+Homelab-Server     ansible_host=192.168.196.40
 
 [vms]
-#Homelab-NextCloud ansible_host=192.168.196.31
+Homelab-NextCloud ansible_host=192.168.196.31
 Homelab-Monitoring ansible_host=192.168.196.50
-Homelab-Gitlab ansible_host=192.168.196.51
+#Homelab-Gitlab ansible_host=192.168.196.51
 Homelab-Pihole ansible_host=192.168.196.60
 Homelab-Pihole-NG ansible_host=192.168.196.61
-Homelab-Unifi ansible_host=192.168.196.70
+#Homelab-Unifi ansible_host=192.168.196.70
 Homelab-Plex ansible_host=192.168.196.80
 Homelab-Teslamate ansible_host=192.168.196.90
-Homelab-Homebridge ansible_host=192.168.196.91
+#Homelab-Homebridge ansible_host=192.168.196.91
+Homelab-LinuxWorkstation ansible_host=192.168.196.71
+Homelab-Openproject ansible_host=192.168.196.72
+Homelab-Pi-Server ansible_host=192.168.196.41
 
 [piholes]
 Homelab-Pihole ansible_host=192.168.196.60
 Homelab-Pihole-NG ansible_host=192.168.196.61
 
 [homebridges]
-Homelab-Homebridge ansible_host=192.168.196.91
+#Homelab-Homebridge ansible_host=192.168.196.91
 
 [cameras]
-Homelab-Camera-Upstairs 	ansible_host=192.168.196.92
+#Homelab-Camera-Upstairs 	ansible_host=192.168.196.92
 #Homelab-Camera-Upstairs	 	ansible_host=192.168.196.93
 #Homelab-Camera-Garage	 	ansible_host=192.168.196.94
 
