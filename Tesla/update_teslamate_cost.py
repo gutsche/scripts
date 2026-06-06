@@ -8,7 +8,7 @@ import psycopg2
 import requests
 
 #global variables
-verbose =  0
+verbose = 0
 central_timezone = pytz.timezone('US/Central')
 utc_timezone = pytz.timezone('UTC')
 day_delta = datetime.timedelta(days=1)
@@ -27,7 +27,6 @@ def calculate_comed_cost(utc_start,utc_end,input_kwh):
         return 0.0
     if verbose >= 3:
         print("Input kwh is {0}".format(kwh))
-
     if verbose >= 3:
         print('Retrieving hourly pricing information from comed for {0} to {1}'.format(utc_start.strftime('%Y%m%d%H%M'),utc_end.strftime('%Y%m%d%H%M')))
     url = 'https://hourlypricing.comed.com/api?type=5minutefeed&datestart={0}&dateend={1}'.format(utc_start.strftime('%Y%m%d%H%M'),utc_end.strftime('%Y%m%d%H%M'))
@@ -129,11 +128,12 @@ def main(args):
 
     #  query the last X entries
     num_query_entries = 3
+    home_ids = [1,85,244,743,744,752]
 
     for row in rows[:num_query_entries]:
         id = row[0]
         address_id = row[12]
-        if address_id == 1:
+        if address_id in home_ids:
             starttime = utc_timezone.localize(row[1])
             endtime = utc_timezone.localize(row[2])
             kwh = row[16]
